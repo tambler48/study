@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <title>Посты</title>
-</head>
+@extends('study.layout')
+        @section('content')
+            <h2> <?= $post->header ?>  </h2>
+            <p> <?=  $post->body ?>  </p>
+        @endsection
 
-<body>
-    <h2> <?php echo $post["header"] ?>  </h2>
-    <p> <?php echo $post["body"] ?>  </p>
-</body>
+

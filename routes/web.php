@@ -11,8 +11,21 @@
 |
 */
 
+Route::prefix('admin')->group(function () {
+    Route::get('new', 'PostController@CreateFormPost');
+    Route::post('new', 'PostController@CreatePost');
+    Route::get('posts', 'PostController@AllPostsAdmin');
+    Route::get('posts/unset/{id}', 'PostController@UnsetPost');
+    Route::get('posts/edit/{id}', 'PostController@EditFormPost');
+    Route::post('posts/edit', 'PostController@EditPost');
+
+});
+
 Route::get('/posts', 'PostController@AllPosts');
 Route::get('/posts/{id}', 'PostController@PostById');
+
+
+
 
 
 Route::get('/', function () {
