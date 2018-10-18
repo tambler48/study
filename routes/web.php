@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/posts', 'PostController@all_posts');
+Route::get('/posts/{id}', 'PostController@post_by_id');
+
+
 Route::get('/', function () {
     return view('welcome');
 });
