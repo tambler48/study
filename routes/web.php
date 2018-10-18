@@ -11,8 +11,8 @@
 |
 */
 
-Route::get('/posts', 'PostController@all_posts');
-Route::get('/posts/{id}', 'PostController@post_by_id');
+Route::get('/posts', 'PostController@AllPosts');
+Route::get('/posts/{id}', 'PostController@PostById');
 
 
 Route::get('/', function () {
