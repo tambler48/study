@@ -14,6 +14,7 @@ class PostController extends Controller
 
     public function PostById($id){      //получение записи по id (для всех)
         $post = \App\Post::find($id);
+        if (empty($post)) abort(404);
         return view('study.post', compact('post')) ;
     }
 

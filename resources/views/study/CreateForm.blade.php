@@ -1,8 +1,8 @@
 @extends('study.layout')
 @section('content')
-    <form method="POST" action="{{url('/admin/new')}}">
+    <form method="POST" action="{{route('admin.new')}}">
         {{csrf_field()}}
-        <input type="hidden" name="user" value="<?= $id ?>">
+        <input type="hidden" name="user" value="{{$id}}">
         <div class="form-group">
             <label>Заголовок записи</label>
             <input required name="header" type="text" class="form-control" >
