@@ -1,6 +1,6 @@
-@extends('study.layout')
+@extends('layout')
 @section('content')
-    <form method="POST" action="{{route('admin.new')}}">
+    <form method="POST" action="{{route('user.new')}}">
         {{csrf_field()}}
         <input type="hidden" name="user" value="{{$id}}">
         <div class="form-group">

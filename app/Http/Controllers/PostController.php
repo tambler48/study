@@ -7,27 +7,27 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    public function allPosts(): object {
+    public function all(): \Illuminate\View\View  {
         $posts = \App\Post::all();     //получение всех записей (для всех)
-        return view('study.posts', compact('posts'));
+        return view('posts.all', compact('posts'));
     }
 
-    public function postById(int $id): object {      //получение записи по id (для всех)
+    public function byId(int $id): \Illuminate\View\View {      //получение записи по id (для всех)
         $post = \App\Post::find($id);
         if (empty($post)) {
             abort(404);
         }
-        return view('study.post', compact('post')) ;
+        return view('posts.post', compact('post')) ;
     }
 
-    public function createFormPost(): object {   //получение формы создания записи (для админа)
+    public function createForm(): \Illuminate\View\View {   //получение формы создания записи (для админа)
             $id = Auth::id();
-            return view('study.createForm', compact('id'));
+            return view('posts.createForm', compact('id'));
     }
 
-    public function createPost(Request $request): object {   // запись новой записи в БД (для админа)
+    public function create(Request $request): \Illuminate\Http\RedirectResponse {   // запись новой записи в БД (для админа)
 
-        $this->validate($request, [
+        $request->validate([
             'user' => 'exists:users,id',
             'header' => 'bail|required|max:255',
             'body' => 'required',
@@ -39,30 +39,31 @@ class PostController extends Controller
         $model->body = $request->body;
         $model->timestamps = false;
         $model->save();
-        return redirect('/admin/posts');
+        return redirect('/user/posts');
     }
 
-    public function allPostsAdmin(): object {//получение всех записей с дополнительными кнопками (для админа)
+    public function allUser(): \Illuminate\View\View {//получение всех записей с дополнительными кнопками (для админа)
         $posts = \App\Post::all();
         $buttons = true;
-        return view('study.posts', compact('posts', 'buttons'));
+        return view('posts.all', compact('posts', 'buttons'));
     }
 
-    public function unsetPost(int $id): object {// удаление записи (для админа)
+    public function delete(int $id): \Illuminate\Http\RedirectResponse {// удаление записи (для админа)
         \App\Post::destroy($id);
-        return redirect('/admin/posts');
+        return redirect('/user/posts');
 
     }
 
-    public function editFormPost(int $id): object {//получение формы редактирования записи (для админа)
+    public function editForm(int $id): \Illuminate\View\View {//получение формы редактирования записи (для админа)
         $post = \App\Post::find($id);
         $id = Auth::id();
-        return view('study.editForm', compact('post', 'id')) ;
+        return view('posts.editForm', compact('post', 'id')) ;
     }
 
 
-    public function editPost(Request $request) {// запись отредактированой записи в БД (для админа)
-        $this->validate($request, [
+    public function edit(Request $request): \Illuminate\Http\RedirectResponse {// запись отредактированой записи в БД (для админа)
+
+        $request->validate([
             'user' => 'exists:users,id',
             'post_id' => 'exists:posts,id',
             'header' => 'bail|required|max:255',
@@ -75,7 +76,7 @@ class PostController extends Controller
         $model->body = $request->body;
         $model->timestamps = false;
         $model->save();
-        return redirect('/admin/posts');
+        return redirect('/user/posts');
     }
 
 

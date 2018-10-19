@@ -11,23 +11,23 @@
 |
 */
 
-Route::prefix('admin')->middleware('auth')->group( function () {
+Route::prefix('user')->middleware('auth')->group( function () {
     Route::get('', function () {
-        return redirect()->route('admin.posts');
+        return redirect()->route('user.posts');
     });
-    Route::get('posts/new', 'PostController@createFormPost')->name('admin.new');
-    Route::post('posts/new', 'PostController@createPost');
-    Route::get('posts', 'PostController@allPostsAdmin')->name('admin.posts');
-    Route::get('posts/unset/{id}', 'PostController@unsetPost')->name('admin.unset');
-    Route::get('posts/edit/{id?}', 'PostController@editFormPost')->name('admin.edit');
-    Route::post('posts/edit', 'PostController@editPost');
-
+    Route::get('posts/new', 'PostController@createForm')->name('user.new');
+    Route::post('posts/new', 'PostController@create');
+    Route::get('posts', 'PostController@allUser')->name('user.posts');
+    Route::get('posts/unset/{id}', 'PostController@delete')->name('user.unset');
+    Route::get('posts/edit/{id?}', 'PostController@editForm')->name('user.edit');
+    Route::post('posts/edit', 'PostController@edit');
 });
 
-Route::get('/posts', 'PostController@allPosts');
-Route::get('/posts/{id}', 'PostController@postById')->name('all.post');
+Route::get('/posts', 'PostController@all');
+Route::get('/posts/{id}', 'PostController@byId')->name('all.post');
 
-
+//5 енд поинтов для операций все, 1, создание, редактирование, удаление
+//удалить posts из методов, уточнить тип объекта, изменить unset на delete, изменить admin на пользователя
 
 
 

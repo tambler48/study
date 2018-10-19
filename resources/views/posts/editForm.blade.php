@@ -1,6 +1,6 @@
-@extends('study.layout')
+@extends('layout')
 @section('content')
-    <form method="POST" action="{{route('admin.edit')}}">
+    <form method="POST" action="{{route('user.edit')}}">
         {{csrf_field()}}
         <input type="hidden" name="user" value="{{$id}} ">
         <input type="hidden" name="post_id" value="{{$post->id}}">
