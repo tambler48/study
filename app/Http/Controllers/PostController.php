@@ -3,27 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
-    public function AllPosts()
-    {
+    public function allPosts(): object {
         $posts = \App\Post::all();     //получение всех записей (для всех)
         return view('study.posts', compact('posts'));
     }
 
-    public function PostById($id){      //получение записи по id (для всех)
+    public function postById(int $id): object {      //получение записи по id (для всех)
         $post = \App\Post::find($id);
-        if (empty($post)) abort(404);
+        if (empty($post)) {
+            abort(404);
+        }
         return view('study.post', compact('post')) ;
     }
 
-    public function CreateFormPost(){   //получение формы создания записи (для админа)
-            $id = 1; //TODO получить id пользователя и проверить на admin
-            return view('study.CreateForm', compact('id'));
+    public function createFormPost(): object {   //получение формы создания записи (для админа)
+            $id = Auth::id();
+            return view('study.createForm', compact('id'));
     }
 
-    public function CreatePost(Request $request){   // запись новой записи в БД (для админа)
+    public function createPost(Request $request): object {   // запись новой записи в БД (для админа)
 
         $this->validate($request, [
             'user' => 'exists:users,id',
@@ -40,32 +42,26 @@ class PostController extends Controller
         return redirect('/admin/posts');
     }
 
-    public function AllPostsAdmin() //получение всех записей с дополнительными кнопками (для админа) TODO: изменить метод только для админа
-    {
+    public function allPostsAdmin(): object {//получение всех записей с дополнительными кнопками (для админа)
         $posts = \App\Post::all();
         $buttons = true;
         return view('study.posts', compact('posts', 'buttons'));
     }
 
-    public function UnsetPost($id) // удаление записи (для админа) TODO: добавить проверку на админку
-    {
+    public function unsetPost(int $id): object {// удаление записи (для админа)
         \App\Post::destroy($id);
         return redirect('/admin/posts');
 
     }
 
-    public function EditFormPost($id) //получение формы редактирования записи (для админа) TODO: добавить проверку на админку и получение id
-    {
+    public function editFormPost(int $id): object {//получение формы редактирования записи (для админа)
         $post = \App\Post::find($id);
-        $user = 1;
-        return view('study.EditForm', compact('post', 'user')) ;
-
+        $id = Auth::id();
+        return view('study.editForm', compact('post', 'id')) ;
     }
 
 
-    public function EditPost(Request $request) // запись отредактированой записи в БД (для админа) TODO: добавить проверку на админку
-    {
-
+    public function editPost(Request $request) {// запись отредактированой записи в БД (для админа)
         $this->validate($request, [
             'user' => 'exists:users,id',
             'post_id' => 'exists:posts,id',

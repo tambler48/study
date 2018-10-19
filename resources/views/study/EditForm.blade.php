@@ -2,7 +2,7 @@
 @section('content')
     <form method="POST" action="{{route('admin.edit')}}">
         {{csrf_field()}}
-        <input type="hidden" name="user" value="{{$user}} ">
+        <input type="hidden" name="user" value="{{$id}} ">
         <input type="hidden" name="post_id" value="{{$post->id}}">
         <div class="form-group">
             <label>Заголовок записи</label>
