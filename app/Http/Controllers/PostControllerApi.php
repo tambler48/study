@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 
 class PostControllerApi extends Controller
 {
+
+
+    //protected $middleware = ['auth:api'];
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +18,7 @@ class PostControllerApi extends Controller
     public function index()
     {
         $posts = \App\Post::all();
-        return response()->json($posts, 201, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return response()->json($posts, 200, ['Content-Type' => 'application/json; charset=UTF-8']);
     }
 
     /**
@@ -61,7 +65,7 @@ class PostControllerApi extends Controller
         if (empty($post)) {
             abort(404);
         }
-        return response()->json($post, 201, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return response()->json($post, 200, ['Content-Type' => 'application/json; charset=UTF-8']);
     }
 
     /**
@@ -97,7 +101,7 @@ class PostControllerApi extends Controller
         $model->body = $request->body;
         $model->timestamps = false;
         $model->save();
-        return response()->json('OK', 201, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return response()->json('OK', 202, ['Content-Type' => 'application/json; charset=UTF-8']);
     }
 
     /**
@@ -109,6 +113,6 @@ class PostControllerApi extends Controller
     public function destroy($id)
     {
         \App\Post::destroy($id);
-        return response()->json('OK', 201, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return response()->json('OK', 200, ['Content-Type' => 'application/json; charset=UTF-8']);
     }
 }

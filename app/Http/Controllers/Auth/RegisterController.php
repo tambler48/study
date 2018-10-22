@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Http\Request;
+
 
 class RegisterController extends Controller
 {
@@ -67,6 +69,26 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'api_token' => $this->api_token,
         ]);
+    }
+
+    protected $api_token = null;
+
+    protected function regist(Request $request)
+    {
+
+        $this->api_token = str_random(60);
+        $this->register($request);
+        // TODO сделать проверку на успешную регистрацию или нет
+        return response()->json(['user' => $request->name, 'token' => $this->api_token], 200);
+    }
+
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+        event(new \Illuminate\Auth\Events\Registered($user = $this->create($request->all())));
+        return $this->registered($request, $user);
     }
 }
