@@ -15,20 +15,10 @@ class PostControllerApi extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): \Illuminate\Http\JsonResponse
     {
         $posts = \App\Post::all();
         return response()->json($posts, 200, ['Content-Type' => 'application/json; charset=UTF-8']);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -37,7 +27,7 @@ class PostControllerApi extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
             'header' => 'bail|required|max:255',
@@ -59,7 +49,7 @@ class PostControllerApi extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($id): \Illuminate\Http\JsonResponse
     {
         $post = \App\Post::find($id);
         if (empty($post)) {
@@ -69,24 +59,13 @@ class PostControllerApi extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $request->validate([
             'user_id' => 'exists:users,id',
@@ -110,7 +89,7 @@ class PostControllerApi extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id): \Illuminate\Http\JsonResponse
     {
         \App\Post::destroy($id);
         return response()->json('OK', 200, ['Content-Type' => 'application/json; charset=UTF-8']);

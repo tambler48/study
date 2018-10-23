@@ -75,7 +75,7 @@ class RegisterController extends Controller
 
     protected $api_token = null;
 
-    protected function regist(Request $request)
+    protected function regist(Request $request): \Illuminate\Http\JsonResponse
     {
 
         $this->api_token = str_random(60);
