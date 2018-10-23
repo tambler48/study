@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 
-Route::post('register', 'Auth\RegisterController@regist')->name('registration');
+Route::post('register', 'Auth\RegisterController@regist');
 Route::post('login', 'Auth\LoginController@login');
 Route::post('logout', 'Auth\LoginController@logout');
 
