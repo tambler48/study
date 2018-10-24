@@ -27,8 +27,8 @@ class PostControllerApi extends Controller
     public function store(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-            'header' => 'bail|required|max:255',
-            'body' => 'required',
+            'header' => ['bail','required','max:255',],
+            'body' => ['required',],
         ]);
 
         $model = new \App\Post;
@@ -65,10 +65,10 @@ class PostControllerApi extends Controller
     public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $request->validate([
-            'user_id' => 'exists:users,id',
-            'post_id' => 'exists:posts,id',
-            'header' => 'bail|required|max:255',
-            'body' => 'required',
+            'user_id' => ['exists:users','id',],
+            'post_id' => ['exists:posts','id',],
+            'header' => ['bail','required','max:255',],
+            'body' => ['required',],
         ]);
 
         $model = \App\Post::find($id);
@@ -77,7 +77,7 @@ class PostControllerApi extends Controller
         $model->body = $request->body;
         $model->timestamps = false;
         $model->save();
-        return response()->json('OK', 202, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return response()->json('OK', 200, ['Content-Type' => 'application/json; charset=UTF-8']);
     }
 
     /**

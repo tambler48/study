@@ -27,10 +27,10 @@ class UserControllerApi extends Controller
     {
 
         $request->validate([
-            'name' => 'bail|required|string|max:191',
-            'email' => 'bail|required|string|email|unique:users|max:191',
-            'password' => 'bail|required|string|min:6',
-            'api_token' => 'bail|required|string|size:60',
+            'name' => ['bail','required','string','max:191',],
+            'email' => ['bail','required','string','email','unique:users','max:191',],
+            'password' => ['bail','required','string','min:6',],
+            'api_token' => ['bail','required','string','size:60',],
         ]);
 
         $model = new \App\User;
@@ -65,10 +65,11 @@ class UserControllerApi extends Controller
      */
     public function update(Request $request, $id): \Illuminate\Http\JsonResponse
     {
+
         $request->validate([
-            'name' => 'bail|string|max:191',
-            'email' => 'bail|string|email|unique:users|max:191',
-            'api_token' => 'bail|string|size:60',
+            'name' => ['bail','string','max:191',],
+            'email' => ['bail','string','email','unique:users','max:191',],
+            'api_token' => ['bail','string','size:60',],
         ]);
 
         $model = \App\User::find($id);
@@ -76,7 +77,7 @@ class UserControllerApi extends Controller
         $model->email = $request->email;
         $model->api_token = $request->api_token;
         $model->save();
-        return response()->json('OK', 202, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return response()->json('OK', 200, ['Content-Type' => 'application/json; charset=UTF-8']);
     }
 
     /**
