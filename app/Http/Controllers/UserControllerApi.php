@@ -2,36 +2,35 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class UserControllerApi extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
-        $arr = \App\User::all();
-        return response()->json($arr, 200, ['Content-Type' => 'application/json; charset=UTF-8']);
+        $model = \App\User::all();
+
+        if (!count($model)) {
+            return $this->jsonResponse('Not found users', 400);
+        }
+        return $this->jsonResponse($model, 200);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
 
-        $request->validate([
-            'name' => ['bail','required','string','max:191',],
-            'email' => ['bail','required','string','email','unique:users','max:191',],
-            'password' => ['bail','required','string','min:6',],
-            'api_token' => ['bail','required','string','size:60',],
+        $validator = Validator::make($request->post(), [
+            'name' => ['bail', 'required', 'max:191', 'string',],
+            'email' => ['bail', 'required', 'max:191', 'string', 'email', 'unique:users',],
+            'password' => ['bail', 'required', 'min:6', 'string',],
+            'api_token' => ['bail', 'required', 'size:60', 'string', 'unique:users',],
         ]);
+
+        if ($validator->fails()) {
+            return $this->jsonResponse($validator->errors(), 400);
+        }
 
         $model = new \App\User;
         $model->name = $request->name;
@@ -39,56 +38,60 @@ class UserControllerApi extends Controller
         $model->password = $request->password;
         $model->api_token = $request->api_token;
         $model->save();
-        return response()->json('OK', 201, ['Content-Type' => 'application/json; charset=UTF-8']);
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id): \Illuminate\Http\JsonResponse
-    {
-        $arr = \App\User::find($id);
-        if (empty($arr)) {
-            abort(404);
-        }
-        return response()->json($arr, 200, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return $this->jsonResponse(['User successfully added', $model->getAttributes()], 201);
+
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id): \Illuminate\Http\JsonResponse
+    public function show($id): JsonResponse
     {
-
-        $request->validate([
-            'name' => ['bail','string','max:191',],
-            'email' => ['bail','string','email','unique:users','max:191',],
-            'api_token' => ['bail','string','size:60',],
-        ]);
 
         $model = \App\User::find($id);
-        $model->name = $request->name;
-        $model->email = $request->email;
-        $model->api_token = $request->api_token;
-        $model->save();
-        return response()->json('OK', 200, ['Content-Type' => 'application/json; charset=UTF-8']);
+        if (empty($model)) {
+            return $this->jsonResponse('Not found user', 400);
+        }
+        return $this->jsonResponse($model, 200);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id): \Illuminate\Http\JsonResponse
+    public function update(Request $request, $id): JsonResponse
     {
-        \App\User::destroy($id);
-        return response()->json('OK', 200, ['Content-Type' => 'application/json; charset=UTF-8']);
+        $model = \App\User::find($id);
+        if (empty($model)) {
+            return $this->jsonResponse('Not found user', 400);
+        }
+
+        $validator = Validator::make($request->post(), [
+            'name' => ['bail', 'string', 'max:191',],
+            'email' => ['bail', 'string', 'max:191', 'email', 'unique:users',],
+            'api_token' => ['bail', 'string', 'size:60', 'unique:users',],
+        ]);
+
+        if ($validator->fails()) {
+            return $this->jsonResponse($validator->errors());
+        }
+
+        $model->name = $request->post('name') ?? $model->name;
+        $model->email = $request->post('email') ?? $model->email;
+        $model->api_token = $request->post('api_token') ?? $model->api_token;
+
+        $model->save();
+        return $this->jsonResponse(['User successfully updated', $model->getAttributes()], 201);
+
     }
+
+    public function destroy($id): JsonResponse
+    {
+        $model = \App\User::find($id);
+        if (empty($model)) {
+            return $this->jsonResponse('Not found user', 400);
+        }
+
+        $model = \App\User::destroy($id);
+        if ($model === 0) {
+            return $this->jsonResponse('Unknown error', 400);
+        }
+        return $this->jsonResponse('User successfully deleted', 201);
+
+    }
+
+
 }

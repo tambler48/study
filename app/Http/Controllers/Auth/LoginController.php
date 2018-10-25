@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class LoginController extends Controller
 {
@@ -38,19 +40,30 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    protected function validateLogin(Request $request)
+    {
+        return Validator::make($request->post(), [
+            $this->username() => ['required','string','exists:users,'.$this->username(),],
+            'password' => ['required', 'string'],
+        ]);
+    }
+
     public function login(Request $request)
     {
-        $this->validateLogin($request);
+        $validator = $this->validateLogin($request);
 
-        if ($this->attemptLogin($request)) {
-            $user = $this->guard()->user();
-            $user->generateToken();
-
-            return response()->json([
-                'data' => $user->toArray(),
-            ]);
+        if ($validator->fails()) {
+            return $this->jsonResponse($validator->errors(), 400);
         }
-        return $this->sendFailedLoginResponse($request);
+
+        if (!$this->attemptLogin($request)) {
+            return $this->sendFailedLoginResponse($request);
+
+        }
+        $user = $this->guard()->user();
+        $user->update(['api_token' => User::generateToken()]);
+
+        return $this->jsonResponse(['data' => $user->toArray(),], 200);
     }
 
     public function logout(Request $request): \Illuminate\Http\JsonResponse
@@ -61,9 +74,14 @@ class LoginController extends Controller
         if ($user) {
             $user->api_token = null;
             $user->save();
+            $message = 'User logged out.';
+            $code = 200;
+        } else {
+            $message = 'Invalid data';
+            $code = 400;
         }
 
-        return response()->json(['data' => 'User logged out.'], 200);
+        return $this->jsonResponse(['data' => $message], $code);
     }
 
 

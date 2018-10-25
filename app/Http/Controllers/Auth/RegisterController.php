@@ -45,7 +45,7 @@ class RegisterController extends Controller
     /**
      * Get a validator for an incoming registration request.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
     protected function validator(array $data)
@@ -60,7 +60,7 @@ class RegisterController extends Controller
     /**
      * Create a new user instance after a valid registration.
      *
-     * @param  array  $data
+     * @param  array $data
      * @return \App\User
      */
     protected function create(array $data)
@@ -69,26 +69,31 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
-            'api_token' => $this->api_token,
+            'api_token' => User::generateToken(),
         ]);
-    }
 
-    protected $api_token = null;
+    }
 
     protected function regist(Request $request): \Illuminate\Http\JsonResponse
     {
-
-        $this->api_token = str_random(60);
-        $this->register($request);
-        // TODO сделать проверку на успешную регистрацию или нет
-        return response()->json(['user' => $request->name, 'token' => $this->api_token], 200);
+        [$result, $code] = $this->register($request);
+        return response()->json($result, $code);
     }
 
 
     public function register(Request $request)
     {
-        $this->validator($request->all())->validate();
+        $validator = $this->validator($request->post());
+        if ($validator->fails()) {
+            return [$validator->errors(), 400];
+        }
         event(new \Illuminate\Auth\Events\Registered($user = $this->create($request->all())));
         return $this->registered($request, $user);
     }
+
+    protected function registered(Request $request, $user)
+    {
+        return [['user' => $user->name, 'email' => $user->email, 'api_token' => $user->api_token], 201];
+    }
+
 }
