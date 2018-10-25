@@ -7,9 +7,11 @@ use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
+
     public function all(): \Illuminate\View\View  {
-        $posts = \App\Post::all();     //получение всех записей (для всех)
-        return view('posts.all', compact('posts'));
+        $data = \App\Post::all();     //получение всех записей (для всех)
+        $title = 'Все записи';
+        return view('posts.block', compact('data', 'title'));
     }
 
     public function byId(int $id): \Illuminate\View\View {      //получение записи по id (для всех)
@@ -22,7 +24,8 @@ class PostController extends Controller
 
     public function createForm(): \Illuminate\View\View {   //получение формы создания записи (для админа)
             $id = Auth::id();
-            return view('posts.createForm', compact('id'));
+            $title = 'Создание записи';
+            return view('posts.createForm', compact('id', 'title'));
     }
 
     public function create(Request $request): \Illuminate\Http\RedirectResponse {   // запись новой записи в БД (для админа)
@@ -43,9 +46,10 @@ class PostController extends Controller
     }
 
     public function allUser(): \Illuminate\View\View {//получение всех записей с дополнительными кнопками (для админа)
-        $posts = \App\Post::all();
+        $data = \App\Post::all();
         $buttons = true;
-        return view('posts.all', compact('posts', 'buttons'));
+        $title = 'Все записи';
+        return view('posts.block', compact('data', 'buttons', 'title'));
     }
 
     public function delete(int $id): \Illuminate\Http\RedirectResponse {// удаление записи (для админа)
@@ -57,7 +61,8 @@ class PostController extends Controller
     public function editForm(int $id): \Illuminate\View\View {//получение формы редактирования записи (для админа)
         $post = \App\Post::find($id);
         $id = Auth::id();
-        return view('posts.editForm', compact('post', 'id')) ;
+        $title = 'Редактирование записи';
+        return view('posts.editForm', compact('post', 'id', 'title'));
     }
 
 

@@ -1,5 +1,5 @@
-@extends('layout')
-@section('content')
+@extends('layouts.container')
+@section('block')
     <form method="POST" action="{{route('user.edit')}}">
         {{csrf_field()}}
         <input type="hidden" name="user" value="{{$id}} ">

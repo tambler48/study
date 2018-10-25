@@ -23,17 +23,14 @@ Route::prefix('user')->middleware('auth')->group( function () {
     Route::post('posts/edit', 'PostController@edit');
 });
 
-Route::get('/posts', 'PostController@all');
+Route::get('/posts', 'PostController@all')->name('all.posts');
 Route::get('/posts/{id}', 'PostController@byId')->name('all.post');
-
-//5 енд поинтов для операций все, 1, создание, редактирование, удаление
-//удалить posts из методов, уточнить тип объекта, изменить unset на delete, изменить admin на пользователя
 
 
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('main');
 
 Auth::routes();
 

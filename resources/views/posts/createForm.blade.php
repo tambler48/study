@@ -1,5 +1,6 @@
-@extends('layout')
-@section('content')
+@extends('layouts.container')
+@section('block')
+
     <form method="POST" action="{{route('user.new')}}">
         {{csrf_field()}}
         <input type="hidden" name="user" value="{{$id}}">
@@ -15,5 +16,6 @@
         <button type="submit" class="btn btn-success">Добавить</button>
         </div>
     </form>
+
 @endsection
 
