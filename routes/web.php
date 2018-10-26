@@ -16,15 +16,17 @@ Route::prefix('user')->middleware('auth')->group( function () {
         return redirect()->route('user.posts');
     });
     Route::get('posts/new', 'PostController@createForm')->name('user.new');
-    Route::post('posts/new', 'PostController@create');
-    Route::get('posts', 'PostController@allUser')->name('user.posts');
-    Route::get('posts/unset/{id}', 'PostController@delete')->name('user.unset');
+    Route::post('posts/new', 'PostController@store');
+    Route::get('posts', 'PostController@index')->name('user.posts');
+    Route::get('posts/{id}', 'PostController@show')->name('user.post');
+    Route::get('posts/unset/{id}', 'PostController@destroy')->name('user.unset');
     Route::get('posts/edit/{id?}', 'PostController@editForm')->name('user.edit');
-    Route::post('posts/edit', 'PostController@edit');
+    Route::post('posts/edit', 'PostController@update');
 });
 
+
 Route::get('/posts', 'PostController@all')->name('all.posts');
-Route::get('/posts/{id}', 'PostController@byId')->name('all.post');
+Route::get('/posts/{id}', 'PostController@show')->name('all.post');
 
 
 

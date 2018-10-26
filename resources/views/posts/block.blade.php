@@ -1,8 +1,9 @@
 @extends('layouts.container')
+
 @section('block')
     @if (isset($buttons))
         <div class="card-title">
-        <a href="{{route('user.new')}}" class="btn btn-success">Создать запись</a>
+        <a href="{{route($routePrefix.'.new')}}" class="btn btn-success">Создать запись</a>
         </div>
     @endif
     <div class="row">
@@ -13,14 +14,14 @@
         <div class="card-body">
 
             @if (isset($buttons))
-                <a href="{{route('user.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
-                <a href="{{route('user.unset',['id' => $item->id])}}" class="text-danger">Удалить</a>
+                <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
+                <a href="{{route($routePrefix.'.unset',['id' => $item->id])}}" class="text-danger">Удалить</a>
             @endif
 
             <h4 class="card-title">
-                <a href="{{route('all.post', ['id' => $item->id])}}">{{$item->header}}</a>
+                <a href="{{route($routePrefix.'.post', ['id' => $item->id])}}">{{mb_strlen($item->header) < 50 ? $item->header : mb_substr($item->header, 0, 50).'...'}}</a>
             </h4>
-            <p class="card-text">{{$item->body}}</p>
+            <p class="card-text">{{mb_strlen($item->header) < 90 ? $item->header : mb_substr($item->body, 0, 90).'...'}}</p>
         </div>
     </div>
 </div>

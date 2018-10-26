@@ -81,6 +81,7 @@
         <section class="main flex-grow-1">
     <main class="py-4">
 
+        @yield('alert')
         @yield('content')
 
     </main>

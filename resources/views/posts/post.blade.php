@@ -1,10 +1,10 @@
 @extends('layouts.container')
 
 @section('block')
-    <div class="container">
-        <div class="jumbotron">
-            <h1>{{$post->header}}</h1>
-            <p>{{$post->body}}</p>
+    <div class="card container jumbotron">
+        <div class="card-body ">
+            <h1 class="card-title">{{$data->header}}</h1>
+            <p class="card-text">{{$data->body}}</p>
         </div>
     </div>
 @endsection
