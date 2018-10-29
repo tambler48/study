@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 trait PostTrait
 {
 
-    public static function takeAll()
+    public function takeAll(): array
     {
 
         $model = \App\Post::all();
@@ -18,7 +18,7 @@ trait PostTrait
         return [$model, 200];
     }
 
-    public function create(Request $request)
+    public function create(Request $request): array
     {
 
         $validator = Validator::make($request->post(), [
@@ -38,7 +38,7 @@ trait PostTrait
         return [$model->getAttributes(), 201];
     }
 
-    public function byId($id)
+    public function byId($id): array
     {
 
         $model = \App\Post::find($id);
@@ -48,7 +48,7 @@ trait PostTrait
         return [$model, 200];
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request, $id): array
     {
 
         $model = \App\Post::find($id);
@@ -71,7 +71,7 @@ trait PostTrait
         return [$model->getAttributes(), 201];
     }
 
-    public function delete($id)
+    public function delete($id): array
     {
 
         $model = \App\Post::find($id);
