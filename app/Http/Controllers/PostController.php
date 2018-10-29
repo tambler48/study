@@ -19,7 +19,7 @@ class PostController extends Controller
 
         [$data, $code] = static::takeAll();
         $title = 'Все записи';
-        $routePrefix = $this->routePrefix;
+        $routePrefix = 'all';
         return view('posts.block', compact('data', 'title', 'routePrefix'));
     }
 
