@@ -42,7 +42,7 @@ class UserControllerApi extends Controller
 
     }
 
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
 
         $model = \App\User::find($id);
@@ -78,7 +78,7 @@ class UserControllerApi extends Controller
 
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
         $model = \App\User::find($id);
         if (empty($model)) {

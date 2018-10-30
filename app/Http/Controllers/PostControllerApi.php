@@ -54,7 +54,7 @@ class PostControllerApi extends Controller
 
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
 
         [$data, $code] = $this->delete($id);

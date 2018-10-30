@@ -48,7 +48,7 @@ class RegisterController extends Controller
      * @param  array $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
+    protected function validator(array $data): \Illuminate\Validation\Validator
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
@@ -63,7 +63,7 @@ class RegisterController extends Controller
      * @param  array $data
      * @return \App\User
      */
-    protected function create(array $data)
+    protected function create(array $data): \App\User
     {
         return User::create([
             'name' => $data['name'],
@@ -81,7 +81,7 @@ class RegisterController extends Controller
     }
 
 
-    public function register(Request $request)
+    public function register(Request $request): array
     {
         $validator = $this->validator($request->post());
         if ($validator->fails()) {
@@ -91,7 +91,7 @@ class RegisterController extends Controller
         return $this->registered($request, $user);
     }
 
-    protected function registered(Request $request, $user)
+    protected function registered(Request $request, $user): array
     {
         return [['user' => $user->name, 'email' => $user->email, 'api_token' => $user->api_token], 201];
     }

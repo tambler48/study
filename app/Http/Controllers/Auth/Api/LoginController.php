@@ -40,7 +40,7 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    protected function validateLogin(Request $request)
+    protected function validateLogin(Request $request): \Illuminate\Validation\Validator
     {
         return Validator::make($request->post(), [
             $this->username() => ['required','string','exists:users,'.$this->username(),],
@@ -48,7 +48,7 @@ class LoginController extends Controller
         ]);
     }
 
-    public function login(Request $request)
+    public function login(Request $request): \Symfony\Component\HttpFoundation\Response
     {
         $validator = $this->validateLogin($request);
 
