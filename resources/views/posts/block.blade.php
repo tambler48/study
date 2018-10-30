@@ -21,7 +21,7 @@
             <h4 class="card-title">
                 <a href="{{route($routePrefix.'.post', ['id' => $item->id])}}">{{mb_strlen($item->header) < 50 ? $item->header : mb_substr($item->header, 0, 50).'...'}}</a>
             </h4>
-            <p class="card-text">{{mb_strlen($item->header) < 90 ? $item->header : mb_substr($item->body, 0, 90).'...'}}</p>
+            <p class="card-text">{{mb_strlen($item->body) < 90 ? $item->body : mb_substr($item->body, 0, 90).'...'}}</p>
         </div>
     </div>
 </div>

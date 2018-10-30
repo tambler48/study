@@ -2,66 +2,89 @@
 
 namespace App\Http\Controllers;
 
-use App\Traits\PostTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Post;
 
 class PostControllerApi extends Controller
 {
 
-    use PostTrait;
-
     public function index(): JsonResponse
     {
 
-        [$data, $code] = static::takeAll();
-        if ($code === 200) {
-            return $this->jsonResponse($data, 200);
+        $model = Post::all();
+        if (!count($model)) {
+            return $this->jsonResponse('Not found posts', 400);
         }
-        return $this->jsonResponse('Not found posts', 400);
+        return $this->jsonResponse($model, 200);
     }
 
     public function store(Request $request): JsonResponse
     {
 
-        [$data, $code] = static::create($request);
-        if ($code === 201) {
-            return $this->jsonResponse(['Post successfully added', $data], 201);
+        $post = $this->trim($request->post());
+        $model = new Post;
+        $model->addPost($post);
+        $model->addValidate([
+            'user_id' => ['required',],
+            'header' => ['required',],
+            'body' => ['required',],
+        ]);
+        $result = $model->validate();
+        if(count($result)){
+            return $this->jsonResponse($result, 400);
+        }else{
+            $model->timestamps = false;
+            $model->save();
         }
-        return $this->jsonResponse($data, 400);
-
+        return $this->jsonResponse(['Post successfully added', $model], 201);
     }
 
     public function show($id): JsonResponse
     {
 
-        [$data, $code] = static::byId($id);
-        if ($code === 200) {
+        $data = Post::find($id);
+        if (!empty($data)) {
             return $this->jsonResponse($data, 200);
         }
         return $this->jsonResponse('Not found post', 400);
-
     }
 
     public function update(Request $request, $id): JsonResponse
     {
 
-        [$data, $code] = $this->edit($request, $id);
-        if ($code === 201) {
-            return $this->jsonResponse(['Post successfully updated', $data], 201);
+        $model = new Post;
+        $model = $model->find($id);
+        if (empty($model)) {
+            return $this->jsonResponse(['Alert' => ['Not found post']], 400);
+        }else{
+            $post = $this->trim($request->post());
+            $model->addPost($post);
+            $result = $model->validate();
+            if(count($result)){
+                return $this->jsonResponse($result, 400);
+            }else{
+                $model->timestamps = false;
+                $model->save();
+            }
         }
-        return $this->jsonResponse($data, 400);
+        return $this->jsonResponse(['Post successfully updated', $model], 201);
 
     }
 
     public function destroy(int $id): JsonResponse
     {
 
-        [$data, $code] = $this->delete($id);
-        if ($code === 201) {
-            return $this->jsonResponse($data, 201);
+        $model = Post::find($id);
+        if (empty($model)) {
+            return $this->jsonResponse(['Alert' => ['Not found post']], 400);
+        }else{
+            $model = Post::destroy($id);
         }
-        return $this->jsonResponse($data, 400);
+        if ($model === 0) {
+            return $this->jsonResponse(['Alert' => ['Unknown error']], 400);
+        }
+        return $this->jsonResponse(['Post successfully deleted'], 201);
     }
 
 }
