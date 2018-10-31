@@ -63,7 +63,7 @@ class PostController extends Controller
         return redirect()->route($this->routePrefix . '.posts');
     }
 
-    public function show(int $id)
+    public function show(int $id): object
     {
 
         $data = Post::find($id);
