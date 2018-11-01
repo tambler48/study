@@ -21,13 +21,11 @@ class Controller extends BaseController
 
     protected function trim(array $data): array
     {
-
-        $data = array_filter($data);
-        foreach ($this->trimKeys as $key => $value){
-            if (isset($data[$value])){
-                unset($data[$value]);
+        $data = array_filter($data, function ($value, $key){
+            if(!in_array($key, $this->trimKeys)){
+                return $value;
             }
-        }
+        }, ARRAY_FILTER_USE_BOTH );
         return $data;
     }
 
