@@ -23,17 +23,14 @@ class Post extends Model
 
     public function addPost(array $post)
     {
-        foreach ($post as $key => $value){
+        foreach ($post as $key => $value) {
             $this->$key = $value;
         }
     }
 
     public function addValidate(array $valids)
     {
-        foreach ($valids as $k=>$v){
-            array_key_exists($k, $this->validators)?: $this->validators[$k] = [] ;
-            array_unshift($this->validators[$k], $v);
-        }
+        $this->validators = array_merge_recursive ($valids, $this->validators);
     }
 
     public function validate(): array

@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('user')->middleware('auth')->group( function () {
+Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('', function () {
         return redirect()->route('user.posts');
     });
@@ -27,7 +27,6 @@ Route::prefix('user')->middleware('auth')->group( function () {
 
 Route::get('/posts', 'PostController@all')->name('all.posts');
 Route::get('/posts/{id}', 'PostController@show')->name('all.post');
-
 
 
 Route::get('/', function () {

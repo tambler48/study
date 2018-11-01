@@ -31,9 +31,9 @@ class PostControllerApi extends Controller
             'body' => ['required',],
         ]);
         $result = $model->validate();
-        if(count($result)){
+        if (count($result)) {
             return $this->jsonResponse($result, 400);
-        }else{
+        } else {
             $model->timestamps = false;
             $model->save();
         }
@@ -57,13 +57,13 @@ class PostControllerApi extends Controller
         $model = $model->find($id);
         if (empty($model)) {
             return $this->jsonResponse(['Alert' => ['Not found post']], 400);
-        }else{
+        } else {
             $post = $this->trim($request->post());
             $model->addPost($post);
             $result = $model->validate();
-            if(count($result)){
+            if (count($result)) {
                 return $this->jsonResponse($result, 400);
-            }else{
+            } else {
                 $model->timestamps = false;
                 $model->save();
             }
@@ -78,7 +78,7 @@ class PostControllerApi extends Controller
         $model = Post::find($id);
         if (empty($model)) {
             return $this->jsonResponse(['Alert' => ['Not found post']], 400);
-        }else{
+        } else {
             $model = Post::destroy($id);
         }
         if ($model === 0) {

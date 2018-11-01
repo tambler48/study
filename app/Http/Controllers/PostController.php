@@ -54,9 +54,9 @@ class PostController extends Controller
             'body' => ['required',],
         ]);
         $result = $model->validate();
-        if(count($result)){
+        if (count($result)) {
             Session::flash('alert', $result);
-        }else{
+        } else {
             $model->timestamps = false;
             $model->save();
         }
@@ -93,13 +93,13 @@ class PostController extends Controller
         $model = $model->find($request->get('post_id'));
         if (empty($model)) {
             Session::flash('alert', ['Alert' => ['Not found post']]);
-        }else{
+        } else {
             $post = $this->trim($request->post());
             $model->addPost($post);
             $result = $model->validate();
-            if(count($result)){
+            if (count($result)) {
                 Session::flash('alert', $result);
-            }else{
+            } else {
                 $model->timestamps = false;
                 $model->save();
             }
@@ -113,7 +113,7 @@ class PostController extends Controller
         $model = Post::find($id);
         if (empty($model)) {
             Session::flash('alert', ['Alert' => ['Not found post']]);
-        }else{
+        } else {
             $model = Post::destroy($id);
         }
         if ($model === 0) {

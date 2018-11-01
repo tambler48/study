@@ -21,12 +21,9 @@ class Controller extends BaseController
 
     protected function trim(array $data): array
     {
-        $data = array_filter($data, function ($value, $key){
-            if(!in_array($key, $this->trimKeys)){
-                return $value;
-            }
-        }, ARRAY_FILTER_USE_BOTH );
-        return $data;
+        return array_filter($data, function ($fieldValue, $fieldName): bool {
+            return !in_array($fieldName, $this->trimKeys) && $fieldValue !== null ;
+        }, ARRAY_FILTER_USE_BOTH);
     }
 
 }
