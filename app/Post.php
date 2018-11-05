@@ -30,7 +30,7 @@ class Post extends Model
 
     public function addValidate(array $valids)
     {
-        $this->validators = array_merge_recursive ($valids, $this->validators);
+        $this->validators = array_merge_recursive($valids, $this->validators);
     }
 
     public function validate(): array
@@ -38,5 +38,6 @@ class Post extends Model
         $validator = Validator::make($this->getAttributes(), $this->validators);
         return $validator->errors()->messages();
     }
+
 
 }
