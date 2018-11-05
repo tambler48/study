@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Post;
+use Gate;
 
 class PostControllerApi extends Controller
 {
@@ -24,6 +25,11 @@ class PostControllerApi extends Controller
 
         $post = $this->trim($request->post());
         $model = new Post;
+
+        if (Gate::denies('create', $model)) {
+            return $this->jsonResponse(['You can not create posts.'], 400);
+        }
+
         $model->addPost($post);
         $model->addValidate([
             'user_id' => ['required',],
@@ -55,6 +61,11 @@ class PostControllerApi extends Controller
 
         $model = new Post;
         $model = $model->find($id);
+
+        if (Gate::denies('update', $model)) {
+            return $this->jsonResponse(['You can not update posts.'], 400);
+        }
+
         if (empty($model)) {
             return $this->jsonResponse(['Alert' => ['Not found post']], 400);
         } else {
@@ -78,6 +89,8 @@ class PostControllerApi extends Controller
         $model = Post::find($id);
         if (empty($model)) {
             return $this->jsonResponse(['Alert' => ['Not found post']], 400);
+        } elseif (Gate::denies('update', $model)) {
+            return $this->jsonResponse(['You can not delete posts.'], 400);
         } else {
             $model = Post::destroy($id);
         }
