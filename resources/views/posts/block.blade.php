@@ -1,7 +1,7 @@
 @extends('layouts.container')
 
 @section('block')
-    @if (isset($buttons))
+    @if ($user_role === 1 || $user_role === 2 || $user_role === 3)
         <div class="card-title">
         <a href="{{route($routePrefix.'.new')}}" class="btn btn-success">Создать запись</a>
         </div>
@@ -13,7 +13,7 @@
         <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
         <div class="card-body">
 
-            @if (isset($buttons))
+            @if ($item->user_id === $user_id || $user_role === 1 || $user_role === 2)
                 <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
                 <a href="{{route($routePrefix.'.unset',['id' => $item->id])}}" class="text-danger">Удалить</a>
             @endif
