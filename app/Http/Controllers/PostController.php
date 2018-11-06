@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Post;
+use App\User;
+use Gate;
 
 class PostController extends Controller
 {
@@ -23,17 +25,25 @@ class PostController extends Controller
 
     public function index(): \Illuminate\View\View
     {
-
         $data = Post::all();
-        $buttons = true;
+        $user = Auth::user();
+        $user_id = $user->id;
+        $user_role = $user->role_id;
         $title = 'Все записи';
         $routePrefix = $this->routePrefix;
-        $alert = Session::pull('alert');
-        return view('posts.block', compact('data', 'buttons', 'title', 'routePrefix', 'alert'));
+        return view('posts.block', compact('data', 'title', 'routePrefix', 'user_id', 'user_role'));
     }
 
-    public function createForm(): \Illuminate\View\View
+    /**
+     * @return \Illuminate\Http\RedirectResponse|Illuminate\View\View
+     */
+    public function createForm(): object
     {
+        if (Gate::denies('create', new Post)) {
+            Session::flash('alert', ['warning' => ['You can not create posts.']]);
+            return redirect()->route($this->routePrefix . '.posts');
+        }
+
 
         $id = Auth::id();
         $title = 'Создание записи';
@@ -43,10 +53,14 @@ class PostController extends Controller
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-
         $post = $this->trim($request->post());
-
         $model = new Post;
+
+        if (Gate::denies('create', $model)) {
+            Session::flash('alert', ['warning' => ['You can not create posts.']]);
+            return redirect()->route($this->routePrefix . '.posts');
+        }
+
         $model->addPost($post);
         $model->addValidate([
             'user_id' => ['required',],
@@ -62,10 +76,11 @@ class PostController extends Controller
         }
         return redirect()->route($this->routePrefix . '.posts');
     }
-
+    /**
+     * @return \Illuminate\Http\RedirectResponse|Illuminate\View\View
+     */
     public function show(int $id): object
     {
-
         $data = Post::find($id);
         if (!empty($data)) {
             return view('posts.post', compact('data'));
@@ -76,10 +91,17 @@ class PostController extends Controller
 
     }
 
-    public function editForm(int $id): \Illuminate\View\View
+    public function editForm(int $id): object
     {
-
         $post = Post::find($id);
+        if (empty($post)) {
+            Session::flash('alert', ['warning' => ['Not found post.']]);
+            return redirect()->route($this->routePrefix . '.posts');
+        } elseif (Gate::denies('update', $post)) {
+            Session::flash('alert', ['warning' => ['You can not update posts.']]);
+            return redirect()->route($this->routePrefix . '.posts');
+        }
+
         $id = Auth::id();
         $title = 'Редактирование записи';
         $routePrefix = $this->routePrefix;
@@ -88,31 +110,37 @@ class PostController extends Controller
 
     public function update(Request $request): \Illuminate\Http\RedirectResponse
     {
-
         $model = new Post;
         $model = $model->find($request->get('post_id'));
         if (empty($model)) {
             Session::flash('alert', ['Alert' => ['Not found post']]);
-        } else {
-            $post = $this->trim($request->post());
-            $model->addPost($post);
-            $result = $model->validate();
-            if (count($result)) {
-                Session::flash('alert', $result);
-            } else {
-                $model->timestamps = false;
-                $model->save();
-            }
+            return redirect()->route($this->routePrefix . '.posts');
         }
+        if (Gate::denies('update', $model)) {
+            Session::flash('alert', ['warning' => ['You can not update posts.']]);
+            return redirect()->route($this->routePrefix . '.posts');
+        }
+
+        $post = $this->trim($request->post());
+        $model->addPost($post);
+        $result = $model->validate();
+        if (count($result)) {
+            Session::flash('alert', $result);
+            return redirect()->route($this->routePrefix . '.posts');
+        }
+
+        $model->timestamps = false;
+        $model->save();
         return redirect()->route($this->routePrefix . '.posts');
     }
 
     public function destroy(int $id): \Illuminate\Http\RedirectResponse
     {
-
         $model = Post::find($id);
         if (empty($model)) {
             Session::flash('alert', ['Alert' => ['Not found post']]);
+        } elseif (Gate::denies('update', $model)) {
+            Session::flash('alert', ['warning' => ['You can not delete posts.']]);
         } else {
             $model = Post::destroy($id);
         }
