@@ -1,8 +1,9 @@
-@extends('layout')
-@section('content')
-    <form method="POST" action="{{route('user.new')}}">
+@extends('layouts.container')
+@section('block')
+
+    <form method="POST" action="{{route($routePrefix.'.new')}}">
         {{csrf_field()}}
-        <input type="hidden" name="user" value="{{$id}}">
+        <input type="hidden" name="user_id" value="{{$id}}">
         <div class="form-group">
             <label>Заголовок записи</label>
             <input required name="header" type="text" class="form-control" >
@@ -15,5 +16,6 @@
         <button type="submit" class="btn btn-success">Добавить</button>
         </div>
     </form>
+
 @endsection
 

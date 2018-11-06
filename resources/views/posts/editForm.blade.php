@@ -1,8 +1,8 @@
-@extends('layout')
-@section('content')
-    <form method="POST" action="{{route('user.edit')}}">
+@extends('layouts.container')
+@section('block')
+    <form method="POST" action="{{route($routePrefix.'.edit')}}">
         {{csrf_field()}}
-        <input type="hidden" name="user" value="{{$id}} ">
+        <input type="hidden" name="user_id" value="{{$id}} ">
         <input type="hidden" name="post_id" value="{{$post->id}}">
         <div class="form-group">
             <label>Заголовок записи</label>

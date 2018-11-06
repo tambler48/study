@@ -14,7 +14,10 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    Добро пожаловать, {{Auth::user()->name}}
+                        <div>
+                            <a href="{{route('user.posts')}}">Просмотр записей</a>
+                        </div>
                 </div>
             </div>
         </div>

@@ -23,8 +23,11 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light navbar-laravel">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
+                <a class="navbar-brand" href="{{ route('main') }}">
                     {{ config('app.name', 'Laravel') }}
+                </a>
+                <a class="navbar-brand" href="{{ route('home') }}">
+                    Home
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -72,9 +75,54 @@
             </div>
         </nav>
 
-        <main class="py-4">
-            @yield('content')
-        </main>
+
     </div>
+    <div class="wrapper d-flex flex-column" style="min-height: 100vh;">
+        <section class="main flex-grow-1">
+    <main class="py-4">
+
+        @yield('alert')
+        @yield('content')
+
+    </main>
+        </section>
+    <!-- Pagination
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">1</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">2</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#">3</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>-->
+
+
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Training laravel project 2018</p>
+        </div>
+        <!-- /.container -->
+    </footer>
+</div>
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+
 </body>
 </html>

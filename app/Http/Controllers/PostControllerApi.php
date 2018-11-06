@@ -3,95 +3,88 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Post;
 
 class PostControllerApi extends Controller
 {
 
-
-    //protected $middleware = ['auth:api'];
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(): \Illuminate\Http\JsonResponse
+    public function index(): JsonResponse
     {
-        $posts = \App\Post::all();
-        return response()->json($posts, 200, ['Content-Type' => 'application/json; charset=UTF-8']);
-    }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request): \Illuminate\Http\JsonResponse
-    {
-        $request->validate([
-            'header' => 'bail|required|max:255',
-            'body' => 'required',
-        ]);
-
-        $model = new \App\Post;
-        $model->user_id = $request->user_id;
-        $model->header = $request->header;
-        $model->body = $request->body;
-        $model->timestamps = false;
-        $model->save();
-        return response()->json('OK', 201, ['Content-Type' => 'application/json; charset=UTF-8']);
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id): \Illuminate\Http\JsonResponse
-    {
-        $post = \App\Post::find($id);
-        if (empty($post)) {
-            abort(404);
+        $model = Post::all();
+        if (!count($model)) {
+            return $this->jsonResponse('Not found posts', 400);
         }
-        return response()->json($post, 200, ['Content-Type' => 'application/json; charset=UTF-8']);
+        return $this->jsonResponse($model, 200);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id): \Illuminate\Http\JsonResponse
+    public function store(Request $request): JsonResponse
     {
-        $request->validate([
-            'user_id' => 'exists:users,id',
-            'post_id' => 'exists:posts,id',
-            'header' => 'bail|required|max:255',
-            'body' => 'required',
+
+        $post = $this->trim($request->post());
+        $model = new Post;
+        $model->addPost($post);
+        $model->addValidate([
+            'user_id' => ['required',],
+            'header' => ['required',],
+            'body' => ['required',],
         ]);
-
-        $model = \App\Post::find($id);
-        $model->user_id = $request->user_id;
-        $model->header = $request->header;
-        $model->body = $request->body;
-        $model->timestamps = false;
-        $model->save();
-        return response()->json('OK', 202, ['Content-Type' => 'application/json; charset=UTF-8']);
+        $result = $model->validate();
+        if (count($result)) {
+            return $this->jsonResponse($result, 400);
+        } else {
+            $model->timestamps = false;
+            $model->save();
+        }
+        return $this->jsonResponse(['Post successfully added', $model], 201);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id): \Illuminate\Http\JsonResponse
+    public function show($id): JsonResponse
     {
-        \App\Post::destroy($id);
-        return response()->json('OK', 200, ['Content-Type' => 'application/json; charset=UTF-8']);
+
+        $data = Post::find($id);
+        if (!empty($data)) {
+            return $this->jsonResponse($data, 200);
+        }
+        return $this->jsonResponse('Not found post', 400);
     }
+
+    public function update(Request $request, $id): JsonResponse
+    {
+
+        $model = new Post;
+        $model = $model->find($id);
+        if (empty($model)) {
+            return $this->jsonResponse(['Alert' => ['Not found post']], 400);
+        } else {
+            $post = $this->trim($request->post());
+            $model->addPost($post);
+            $result = $model->validate();
+            if (count($result)) {
+                return $this->jsonResponse($result, 400);
+            } else {
+                $model->timestamps = false;
+                $model->save();
+            }
+        }
+        return $this->jsonResponse(['Post successfully updated', $model], 201);
+
+    }
+
+    public function destroy(int $id): JsonResponse
+    {
+
+        $model = Post::find($id);
+        if (empty($model)) {
+            return $this->jsonResponse(['Alert' => ['Not found post']], 400);
+        } else {
+            $model = Post::destroy($id);
+        }
+        if ($model === 0) {
+            return $this->jsonResponse(['Alert' => ['Unknown error']], 400);
+        }
+        return $this->jsonResponse(['Post successfully deleted'], 201);
+    }
+
 }
