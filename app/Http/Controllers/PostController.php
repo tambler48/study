@@ -32,10 +32,12 @@ class PostController extends Controller
         $user_role = $user->role_id;
         $title = 'Все записи';
         $routePrefix = $this->routePrefix;
-        $alert = Session::pull('alert');
-        return view('posts.block', compact('data', 'title', 'routePrefix', 'alert', 'user_id', 'user_role'));
+        return view('posts.block', compact('data', 'title', 'routePrefix', 'user_id', 'user_role'));
     }
 
+    /**
+     * @return \Illuminate\Http\RedirectResponse|Illuminate\View\View
+     */
     public function createForm(): object
     {
 
@@ -52,7 +54,6 @@ class PostController extends Controller
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-
 
         $post = $this->trim($request->post());
         $model = new Post;
@@ -77,7 +78,9 @@ class PostController extends Controller
         }
         return redirect()->route($this->routePrefix . '.posts');
     }
-
+    /**
+     * @return \Illuminate\Http\RedirectResponse|Illuminate\View\View
+     */
     public function show(int $id): object
     {
 
@@ -95,8 +98,10 @@ class PostController extends Controller
     {
 
         $post = Post::find($id);
-
-        if (Gate::denies('update', $post)) {
+        if(empty($post)){
+            Session::flash('alert', ['warning' => ['Not found post.']]);
+            return redirect()->route($this->routePrefix . '.posts');
+        } elseif (Gate::denies('update', $post)) {
             Session::flash('alert', ['warning' => ['You can not update posts.']]);
             return redirect()->route($this->routePrefix . '.posts');
         }
