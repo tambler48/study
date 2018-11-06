@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\User;
 
 class UserControllerApi extends Controller
 {
     public function index(): JsonResponse
     {
-        $model = \App\User::all();
+        $model = User::all();
 
         if (!count($model)) {
             return $this->jsonResponse('Not found users', 400);
@@ -20,73 +20,60 @@ class UserControllerApi extends Controller
 
     public function store(Request $request): JsonResponse
     {
+        $user = new User();
 
-        $validator = Validator::make($request->post(), [
-            'name' => ['bail', 'required', 'max:191', 'string',],
-            'email' => ['bail', 'required', 'max:191', 'string', 'email', 'unique:users',],
-            'password' => ['bail', 'required', 'min:6', 'string',],
-            'api_token' => ['bail', 'required', 'size:60', 'string', 'unique:users',],
-        ]);
+        $validateResult = $user->validator($request->post(), 0, [
+            'name' => ['required',],
+            'email' => ['required',],
+            'password' => ['required',],
+        ])->errors()->messages();
 
-        if ($validator->fails()) {
-            return $this->jsonResponse($validator->errors(), 400);
+        if(count($validateResult)){
+            return $this->jsonResponse($validateResult, 400);
         }
-
-        $model = new \App\User;
-        $model->name = $request->name;
-        $model->email = $request->email;
-        $model->password = $request->password;
-        $model->api_token = $request->api_token;
-        $model->save();
-        return $this->jsonResponse(['User successfully added', $model->getAttributes()], 201);
-
+        $userParams = $this->trim($request->post());
+        $user->addModel($userParams);
+        $user->save();
+        return $this->jsonResponse(['User successfully added', $user->getAttributes()], 201);
     }
 
     public function show(int $id): JsonResponse
     {
 
-        $model = \App\User::find($id);
+        $model = User::find($id);
         if (empty($model)) {
             return $this->jsonResponse('Not found user', 400);
         }
         return $this->jsonResponse($model, 200);
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
-        $model = \App\User::find($id);
-        if (empty($model)) {
+        $user = User::find($id);
+        if (empty($user)) {
             return $this->jsonResponse('Not found user', 400);
         }
 
-        $validator = Validator::make($request->post(), [
-            'name' => ['bail', 'string', 'max:191',],
-            'email' => ['bail', 'string', 'max:191', 'email', 'unique:users',],
-            'api_token' => ['bail', 'string', 'size:60', 'unique:users',],
-        ]);
-
-        if ($validator->fails()) {
-            return $this->jsonResponse($validator->errors());
+        $validateResult = $user->validator($request->post())->errors()->messages();
+        if(count($validateResult)){
+            return $this->jsonResponse($validateResult, 400);
         }
-
-        $model->name = $request->post('name') ?? $model->name;
-        $model->email = $request->post('email') ?? $model->email;
-        $model->api_token = $request->post('api_token') ?? $model->api_token;
-
-        $model->save();
-        return $this->jsonResponse(['User successfully updated', $model->getAttributes()], 201);
+        $userParams = $this->trim($request->post());
+        $user->addModel($userParams);
+        $user->save();
+        return $this->jsonResponse(['User successfully updated', $user->getAttributes()], 201);
 
     }
 
     public function destroy(int $id): JsonResponse
     {
-        $model = \App\User::find($id);
-        if (empty($model)) {
+        $user = User::find($id);
+        if (empty($user)) {
             return $this->jsonResponse('Not found user', 400);
         }
 
-        $model = \App\User::destroy($id);
-        if ($model === 0) {
+        $user = User::destroy($id);
+        if ($user === 0) {
             return $this->jsonResponse('Unknown error', 400);
         }
         return $this->jsonResponse('User successfully deleted', 201);

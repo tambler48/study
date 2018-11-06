@@ -8,7 +8,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 
 class PostPolicy
 {
-    use HandlesAuthorization;
+    //use HandlesAuthorization;
 
     public function create(User $user)
     {
