@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 @section('content')
     @if (isset($buttons))
     <a href="{{route('user.new')}}" class="btn btn-success">Создать запись</a>
