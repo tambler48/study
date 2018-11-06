@@ -29,9 +29,7 @@ class UserController extends Controller
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
-
         $user = new User();
-
         $userData = $user->validator($request->post(), 0, [
             'name' => ['required',],
             'email' => ['required',],
@@ -79,13 +77,13 @@ class UserController extends Controller
         $user = $user->find($id);
         if (empty($user)) {
             Session::flash('alert', ['Alert' => ['Not found user.']]);
-        } else {
-            $params = $this->trim($request->post());
-            $params = $user->validator($params, $id)->validate();
-            $user->addModel($params);
-            $user->timestamps = false;
-            $user->save();
+            return redirect()->route($this->routePrefix . '.index');
         }
+        $params = $this->trim($request->post());
+        $params = $user->validator($params, $id)->validate();
+        $user->addModel($params);
+        $user->timestamps = false;
+        $user->save();
         return redirect()->route($this->routePrefix . '.index');
     }
 
@@ -94,9 +92,9 @@ class UserController extends Controller
         $user = User::find($id);
         if (empty($user)) {
             Session::flash('alert', ['Alert' => ['Not found post']]);
-        } else {
-            $user = User::destroy($id);
+            return redirect()->route($this->routePrefix . '.index');
         }
+        $user = User::destroy($id);
         if ($user === 0) {
             Session::flash('alert', ['Alert' => ['Unknown error']]);
         }
