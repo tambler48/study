@@ -44,6 +44,7 @@ class PostController extends Controller
             return redirect()->route($this->routePrefix . '.posts');
         }
 
+
         $id = Auth::id();
         $title = 'Создание записи';
         $routePrefix = $this->routePrefix;
@@ -75,7 +76,6 @@ class PostController extends Controller
         }
         return redirect()->route($this->routePrefix . '.posts');
     }
-
     /**
      * @return \Illuminate\Http\RedirectResponse|Illuminate\View\View
      */
@@ -101,6 +101,7 @@ class PostController extends Controller
             Session::flash('alert', ['warning' => ['You can not update posts.']]);
             return redirect()->route($this->routePrefix . '.posts');
         }
+
         $id = Auth::id();
         $title = 'Редактирование записи';
         $routePrefix = $this->routePrefix;
