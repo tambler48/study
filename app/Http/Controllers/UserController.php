@@ -27,7 +27,7 @@ class UserController extends Controller
         return view('auth.register', compact('routePrefix', 'roles'));
     }
 
-    public function store(Request $request): \Illuminate\View\View
+    public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
 
         $user = new User();
@@ -40,7 +40,6 @@ class UserController extends Controller
         ])->validate();
 
         $user->addModel($userData);
-        dd($user);
         $user->save();
         return redirect()->route($this->routePrefix . '.index');
     }
