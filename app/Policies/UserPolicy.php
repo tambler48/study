@@ -2,23 +2,21 @@
 
 namespace App\Policies;
 
-use App\Role;
 use App\User;
-use App\Post;
+use App\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class PostPolicy
+class UserPolicy
 {
     //use HandlesAuthorization;
 
     protected $operations = [
-        Role::ADMIN => ['create', 'update'],
-        Role::Moderator => ['create', 'update'],
-        Role::User => ['create', 'update_own'],
+        Role::ADMIN => ['view', 'create', 'update',],
+        Role::Moderator => ['view',],
     ];
     /*
-     * для хранения операций доступных текущему пользователю
-     */
+    * для хранения операций доступных текущему пользователю
+    */
     protected $roleOperates = [];
 
     public function before(User $user): ?bool
@@ -34,6 +32,14 @@ class PostPolicy
         return null;
     }
 
+    public function view(User $user): bool
+    {
+        if (in_array('view', $this->roleOperates)) {
+            return true;
+        }
+        return false;
+    }
+
     public function create(User $user): bool
     {
         if (in_array('create', $this->roleOperates)) {
@@ -42,19 +48,18 @@ class PostPolicy
         return false;
     }
 
-    public function update(User $user, Post $post): bool
+    public function update(User $user, User $model): bool
     {
         if (in_array('update', $this->roleOperates)) {
             return true;
-        } elseif (in_array('update_own', $this->roleOperates) && $user->id === $post->user_id) {
+        } elseif (in_array('update_own', $this->roleOperates) && $user->id === $model->user_id) {
             return true;
         }
         return false;
     }
 
-    public function destroy(User $user, Post $post): bool
+    public function destroy(User $user, User $model): bool
     {
-        return $this->update($user, $post);
+        return $this->update($user, $model);
     }
-
 }

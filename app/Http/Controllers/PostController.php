@@ -43,8 +43,6 @@ class PostController extends Controller
             Session::flash('alert', ['warning' => ['You can not create posts.']]);
             return redirect()->route($this->routePrefix . '.posts');
         }
-
-
         $id = Auth::id();
         $title = 'Создание записи';
         $routePrefix = $this->routePrefix;
@@ -76,6 +74,7 @@ class PostController extends Controller
         }
         return redirect()->route($this->routePrefix . '.posts');
     }
+
     /**
      * @return \Illuminate\Http\RedirectResponse|Illuminate\View\View
      */
@@ -139,7 +138,7 @@ class PostController extends Controller
         $model = Post::find($id);
         if (empty($model)) {
             Session::flash('alert', ['Alert' => ['Not found post']]);
-        } elseif (Gate::denies('update', $model)) {
+        } elseif (Gate::denies('destroy', $model)) {
             Session::flash('alert', ['warning' => ['You can not delete posts.']]);
         } else {
             $model = Post::destroy($id);

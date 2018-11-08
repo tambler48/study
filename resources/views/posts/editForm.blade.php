@@ -14,7 +14,7 @@
             <textarea required name="body" class="form-control" rows="3">{{$post->body}}</textarea>
         </div>
         <div class="form-group">
-        <button type="submit" class="btn btn-primary">Изменить</button>
+            <button type="submit" class="btn btn-primary">Изменить</button>
         </div>
     </form>
 @endsection

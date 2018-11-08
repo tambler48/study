@@ -2,9 +2,11 @@
 
 @section('block')
 
-    <div class="card-title">
-        <a href="{{route($routePrefix.'.create')}}" class="btn btn-success">Создать пользователя</a>
-    </div>
+    @can('create', new \App\User())
+        <div class="card-title">
+            <a href="{{route($routePrefix.'.create')}}" class="btn btn-success">Создать пользователя</a>
+        </div>
+    @endcan
 
     <div class="row">
         @foreach($data as $item)
@@ -14,16 +16,16 @@
                     <div class="card-body">
 
 
-                        <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
-
-                        <form method="POST" action="{{route($routePrefix.'.destroy',['id' => $item->id])}}">
-                            <input name="_method" type="hidden" value="DELETE">
-                            {{ csrf_field() }}
-                            <button type="submit" class="btn btn-link text-danger">
-                                Удалить
-                            </button>
-                        </form>
-
+                        @can('update', new \App\User())
+                            <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
+                            <form method="POST" action="{{route($routePrefix.'.destroy',['id' => $item->id])}}">
+                                <input name="_method" type="hidden" value="DELETE">
+                                {{ csrf_field() }}
+                                <button type="submit" class="btn btn-link text-danger">
+                                    Удалить
+                                </button>
+                            </form>
+                        @endcan
 
                         <h4 class="card-title">
                             <a href="{{route($routePrefix.'.show', ['id' => $item->id])}}">{{$item->name}}</a>

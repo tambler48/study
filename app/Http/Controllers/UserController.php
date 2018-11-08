@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Role;
+use Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -12,16 +13,30 @@ class UserController extends Controller
 
     protected $routePrefix = 'manage';
 
-    public function index(): \Illuminate\View\View
+    /**
+     * @return \Illuminate\View\View|Illuminate\Http\RedirectResponse
+     */
+    public function index(): object
     {
+        if (Gate::denies('view', new User)) {
+            Session::flash('alert', ['warning' => ['You can not see users.']]);
+            return redirect()->back();
+        }
         $data = User::all();
         $title = 'Список пользователей';
         $routePrefix = $this->routePrefix;
         return view($routePrefix . '.block', compact('data', 'title', 'routePrefix'));
     }
 
-    public function create(): \Illuminate\View\View
+    /**
+     * @return \Illuminate\View\View|Illuminate\Http\RedirectResponse
+     */
+    public function create(): object
     {
+        if (Gate::denies('create', new User)) {
+            Session::flash('alert', ['warning' => ['You can not create users.']]);
+            return redirect()->back();
+        }
         $routePrefix = $this->routePrefix;
         $roles = Role::getRoles();
         return view('auth.register', compact('routePrefix', 'roles'));
@@ -29,6 +44,10 @@ class UserController extends Controller
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
+        if (Gate::denies('create', new User)) {
+            Session::flash('alert', ['warning' => ['You can not create users.']]);
+            return redirect()->back();
+        }
         $user = new User();
         $userData = $user->validator($request->post(), 0, [
             'name' => ['required',],
@@ -47,6 +66,10 @@ class UserController extends Controller
      */
     public function show(int $id): object
     {
+        if (Gate::denies('view', new User)) {
+            Session::flash('alert', ['warning' => ['You can not see users.']]);
+            return redirect()->back();
+        }
         $data = User::find($id);
         if (!empty($data)) {
             return view('manage.user', compact('data'));
@@ -61,6 +84,10 @@ class UserController extends Controller
      */
     public function edit(int $id): object
     {
+        if (Gate::denies('update', new User)) {
+            Session::flash('alert', ['warning' => ['You can not update users.']]);
+            return redirect()->back();
+        }
         $user = User::find($id);
         if (empty($user)) {
             Session::flash('alert', ['warning' => ['Not found user.']]);
@@ -73,6 +100,10 @@ class UserController extends Controller
 
     public function update(Request $request, int $id): \Illuminate\Http\RedirectResponse
     {
+        if (Gate::denies('update', new User)) {
+            Session::flash('alert', ['warning' => ['You can not update users.']]);
+            return redirect()->back();
+        }
         $user = new User();
         $user = $user->find($id);
         if (empty($user)) {
@@ -89,6 +120,10 @@ class UserController extends Controller
 
     public function destroy($id): \Illuminate\Http\RedirectResponse
     {
+        if (Gate::denies('destroy', new User)) {
+            Session::flash('alert', ['warning' => ['You can not destroy users.']]);
+            return redirect()->back();
+        }
         $user = User::find($id);
         if (empty($user)) {
             Session::flash('alert', ['Alert' => ['Not found post']]);

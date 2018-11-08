@@ -85,7 +85,7 @@ class PostControllerApi extends Controller
         if (empty($model)) {
             return $this->jsonResponse(['Alert' => ['Not found post']], 400);
         }
-        if (Gate::denies('update', $model)) {
+        if (Gate::denies('destroy', $model)) {
             return $this->jsonResponse(['You can not delete posts.'], 400);
         }
         $model = Post::destroy($id);
