@@ -11,7 +11,7 @@ class UserControllerApi extends Controller
 {
     public function index(): JsonResponse
     {
-        if (Gate::denies('look', new User)) {
+        if (Gate::denies('view', new User)) {
             return $this->jsonResponse('You can not see users.', 400);
         }
         $model = User::all();
@@ -44,7 +44,7 @@ class UserControllerApi extends Controller
 
     public function show(int $id): JsonResponse
     {
-        if (Gate::denies('look', new User)) {
+        if (Gate::denies('view', new User)) {
             return $this->jsonResponse('You can not see users.', 400);
         }
         $model = User::find($id);

@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index(): object
     {
-        if (Gate::denies('look', new User)) {
+        if (Gate::denies('view', new User)) {
             Session::flash('alert', ['warning' => ['You can not see users.']]);
             return redirect()->back();
         }
@@ -66,7 +66,7 @@ class UserController extends Controller
      */
     public function show(int $id): object
     {
-        if (Gate::denies('look', new User)) {
+        if (Gate::denies('view', new User)) {
             Session::flash('alert', ['warning' => ['You can not see users.']]);
             return redirect()->back();
         }

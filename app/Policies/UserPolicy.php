@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\User;
+use App\Role;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
@@ -10,35 +11,36 @@ class UserPolicy
     //use HandlesAuthorization;
 
     protected $operations = [
-        'Admin' => ['look', 'create', 'update',],
-        'Moderator' => ['look',],
+        Role::ADMIN => ['view', 'create', 'update',],
+        Role::Moderator => ['view',],
     ];
     /*
     * для хранения операций доступных текущему пользователю
     */
     protected $roleOperates = [];
 
-    public function before(User $user)
+    public function before(User $user): ?bool
     {
         $role = $user->hasOne('App\Role', 'id', 'role_id')->getResults()->name;
-        if ($role === 'Admin') {
+        if ($role === Role::ADMIN) {
             return true;
         }
         if (!array_key_exists($role, $this->operations)) {
             return false;
         }
         $this->roleOperates = $this->operations[$role];
+        return null;
     }
 
-    public function look(User $user)
+    public function view(User $user): bool
     {
-        if (in_array('look', $this->roleOperates)) {
+        if (in_array('view', $this->roleOperates)) {
             return true;
         }
         return false;
     }
 
-    public function create(User $user)
+    public function create(User $user): bool
     {
         if (in_array('create', $this->roleOperates)) {
             return true;
@@ -46,7 +48,7 @@ class UserPolicy
         return false;
     }
 
-    public function update(User $user, User $model)
+    public function update(User $user, User $model): bool
     {
         if (in_array('update', $this->roleOperates)) {
             return true;
@@ -56,7 +58,7 @@ class UserPolicy
         return false;
     }
 
-    public function destroy(User $user, User $model)
+    public function destroy(User $user, User $model): bool
     {
         return $this->update($user, $model);
     }
