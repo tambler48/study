@@ -74,6 +74,7 @@ class PostController extends Controller
         }
         return redirect()->route($this->routePrefix . '.posts');
     }
+
     /**
      * @return \Illuminate\Http\RedirectResponse|Illuminate\View\View
      */

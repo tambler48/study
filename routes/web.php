@@ -22,7 +22,7 @@ Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('posts/unset/{id}', 'PostController@destroy')->name('user.unset');
     Route::get('posts/edit/{id?}', 'PostController@editForm')->name('user.edit');
     Route::post('posts/edit', 'PostController@update');
-    Route::resource('manage', 'UserController')/*->middleware('checkRole')*/;
+    Route::resource('manage', 'UserController');
 });
 
 

@@ -18,7 +18,7 @@
 
             @if(isset($data->api_token))
                 <td>{{$data->api_token}}</td>
-                @else
+            @else
                 <td>NULL</td>
             @endif
         </tr>

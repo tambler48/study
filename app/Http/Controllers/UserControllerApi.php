@@ -33,7 +33,7 @@ class UserControllerApi extends Controller
             'password' => ['required',],
         ])->errors()->messages();
 
-        if(count($validateResult)){
+        if (count($validateResult)) {
             return $this->jsonResponse($validateResult, 400);
         }
         $userParams = $this->trim($request->post());
@@ -65,7 +65,7 @@ class UserControllerApi extends Controller
         }
 
         $validateResult = $user->validator($request->post())->errors()->messages();
-        if(count($validateResult)){
+        if (count($validateResult)) {
             return $this->jsonResponse($validateResult, 400);
         }
         $userParams = $this->trim($request->post());
