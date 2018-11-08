@@ -35,11 +35,12 @@
                             <a href="{{route('user.posts')}}">Просмотр записей</a>
                         </div>
 
-                        @if((\Illuminate\Support\Facades\Auth::user())->role_id === 1)
+                        @can('look', new \App\User())
                         <div>
                             <a href="{{route('manage.index')}}">Просмотр пользователей</a>
                         </div>
-                            @endif
+                            @endcan
+
                 </div>
             </div>
         </div>
