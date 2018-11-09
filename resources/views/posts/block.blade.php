@@ -3,7 +3,7 @@
 @section('block')
     @if ($user_role === 1 || $user_role === 2 || $user_role === 3)
         <div class="card-title">
-            <a href="{{route($routePrefix.'.new')}}" class="btn btn-success">Создать запись</a>
+            <a href="{{route($routePrefix.'.new')}}" class="btn btn-success">{{__('Create Post')}}</a>
         </div>
     @endif
     <div class="row">
@@ -14,9 +14,9 @@
                     <div class="card-body">
 
                         @if ($item->user_id === $user_id || $user_role === 1 || $user_role === 2)
-                            <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
+                            <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">{{__('Edit')}}</a>
                             <a href="{{route($routePrefix.'.unset',['id' => $item->id])}}"
-                               class="text-danger">Удалить</a>
+                               class="text-danger">{{__('Delete')}}</a>
                         @endif
 
                         <h4 class="card-title">

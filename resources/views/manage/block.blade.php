@@ -4,7 +4,7 @@
 
     @can('create', new \App\User())
         <div class="card-title">
-            <a href="{{route($routePrefix.'.create')}}" class="btn btn-success">Создать пользователя</a>
+            <a href="{{route($routePrefix.'.create')}}" class="btn btn-success">{{__('Create User')}}</a>
         </div>
     @endcan
 
@@ -17,12 +17,12 @@
 
 
                         @can('update', new \App\User())
-                            <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
+                            <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">{{__('Edit')}}</a>
                             <form method="POST" action="{{route($routePrefix.'.destroy',['id' => $item->id])}}">
                                 <input name="_method" type="hidden" value="DELETE">
                                 {{ csrf_field() }}
                                 <button type="submit" class="btn btn-link text-danger">
-                                    Удалить
+                                    {{__('Delete')}}
                                 </button>
                             </form>
                         @endcan

@@ -18,7 +18,7 @@ class PostController extends Controller
     public function all(): \Illuminate\View\View
     {
         $data = Post::all();
-        $title = 'Все записи';
+        $title = 'List of posts';
         $routePrefix = 'all';
         $alert = Session::pull('alert');
         return view('posts.block', compact('data', 'title', 'routePrefix', 'alert'));
@@ -30,7 +30,7 @@ class PostController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
         $user_role = $user->role_id;
-        $title = 'Все записи';
+        $title = 'List of posts';
         $routePrefix = $this->routePrefix;
         return view('posts.block', compact('data', 'title', 'routePrefix', 'user_id', 'user_role'));
     }
@@ -45,7 +45,7 @@ class PostController extends Controller
             return redirect()->route($this->routePrefix . '.posts');
         }
         $id = Auth::id();
-        $title = 'Создание записи';
+        $title = 'Create Post';
         $routePrefix = $this->routePrefix;
         return view('posts.createForm', compact('id', 'title', 'routePrefix'));
     }
@@ -103,7 +103,7 @@ class PostController extends Controller
         }
 
         $id = Auth::id();
-        $title = 'Редактирование записи';
+        $title = 'Edit Post';
         $routePrefix = $this->routePrefix;
         return view('posts.editForm', compact('post', 'id', 'title', 'routePrefix'));
     }

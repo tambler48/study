@@ -43,5 +43,25 @@
   "Verify Your Email Address": "Проверьте Ваш email-адрес",
   "You are receiving this email because we received a password reset request for your account.": "Вы получили это письмо, потому что мы получили запрос на сброс пароля для Вашей учетной записи.",
   "Whoops!": "Упс!",
-  "Whoops, something went wrong on our servers.": "Упс, на наших серверах что-то пошло не так."
+  "Whoops, something went wrong on our servers.": "Упс, на наших серверах что-то пошло не так.",
+  "Choose a role": "Выберите роль",
+  "Role": "Роль",
+  "Api token": "Api токен",
+
+  "Save": "Сохранить",
+  "Edit": "Редактировать",
+  "Delete": "Удалить",
+  "Homepage": "Домашняя страница",
+
+  "Create User": "Создать пользователя",
+  "Edit User": "Редактировать пользователя",
+  "View users": "Просмотр пользователей",
+  "List of users": "Список пользователей",
+
+  "View posts": "Просмотр записей",
+  "List of posts": "Список записей",
+  "Create Post": "Создать запись",
+  "Edit Post": "Редактировать запись",
+  "Header Post": "Заголовок записи",
+  "Body Post": "Тело записи"
 }

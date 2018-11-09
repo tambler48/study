@@ -24,7 +24,7 @@ class UserController extends Controller
             return redirect()->back();
         }
         $data = User::all();
-        $title = 'Список пользователей';
+        $title = 'List of users';
         $routePrefix = $this->routePrefix;
         return view($routePrefix . '.block', compact('data', 'title', 'routePrefix'));
     }
@@ -40,7 +40,8 @@ class UserController extends Controller
         }
         $routePrefix = $this->routePrefix;
         $roles = Role::getRoles();
-        return view('auth.register', compact('routePrefix', 'roles'));
+        $title = 'Create User';
+        return view('auth.register', compact('routePrefix', 'roles', 'title'));
     }
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
@@ -92,11 +93,12 @@ class UserController extends Controller
         $user = User::find($id);
         if (empty($user)) {
             Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'user'])]]);
-            return redirect()->route($this->routePrefix . '.posts');
+            return redirect()->route($this->routePrefix . '.index');
         }
         $routePrefix = $this->routePrefix;
         $roles = Role::getRoles();
-        return view('manage.editUser', compact('routePrefix', 'roles', 'user'));
+        $title = 'Update Post';
+        return view('manage.editUser', compact('routePrefix', 'roles', 'user', 'title'));
     }
 
     public function update(Request $request, int $id): \Illuminate\Http\RedirectResponse
