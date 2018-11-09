@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Session;
 use App\Post;
 use App\User;
 use Gate;
+use Lang;
 
 class PostController extends Controller
 {
@@ -40,7 +41,7 @@ class PostController extends Controller
     public function createForm(): object
     {
         if (Gate::denies('create', new Post)) {
-            Session::flash('alert', ['warning' => ['You can not create posts.']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_create', ['subject' => 'post'])]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
         $id = Auth::id();
@@ -55,7 +56,7 @@ class PostController extends Controller
         $model = new Post;
 
         if (Gate::denies('create', $model)) {
-            Session::flash('alert', ['warning' => ['You can not create posts.']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_create', ['subject' => 'post'])]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
 
@@ -84,7 +85,7 @@ class PostController extends Controller
         if (!empty($data)) {
             return view('posts.post', compact('data'));
         }
-        Session::flash('alert', ['Alert' => ['Not found post']]);
+        Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
         $prefix = Auth::id() === NULL ? 'all' : $this->routePrefix;
         return redirect()->route($prefix . '.posts');
 
@@ -94,10 +95,10 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         if (empty($post)) {
-            Session::flash('alert', ['warning' => ['Not found post.']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
             return redirect()->route($this->routePrefix . '.posts');
         } elseif (Gate::denies('update', $post)) {
-            Session::flash('alert', ['warning' => ['You can not update posts.']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_update', ['subject' => 'post'])]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
 
@@ -112,11 +113,11 @@ class PostController extends Controller
         $model = new Post;
         $model = $model->find($request->get('post_id'));
         if (empty($model)) {
-            Session::flash('alert', ['Alert' => ['Not found post']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
         if (Gate::denies('update', $model)) {
-            Session::flash('alert', ['warning' => ['You can not update posts.']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_update', ['subject' => 'post'])]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
 
@@ -137,14 +138,14 @@ class PostController extends Controller
     {
         $model = Post::find($id);
         if (empty($model)) {
-            Session::flash('alert', ['Alert' => ['Not found post']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
         } elseif (Gate::denies('destroy', $model)) {
-            Session::flash('alert', ['warning' => ['You can not delete posts.']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.not_delete', ['subject' => 'post'])]]);
         } else {
             $model = Post::destroy($id);
         }
         if ($model === 0) {
-            Session::flash('alert', ['Alert' => ['Unknown error']]);
+            Session::flash('alert', ['Warning' => [Lang::get('messages.unknown')]]);
         }
         return redirect()->route($this->routePrefix . '.posts');
     }
