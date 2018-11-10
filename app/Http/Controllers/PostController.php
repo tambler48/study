@@ -41,7 +41,7 @@ class PostController extends Controller
     public function createForm(): object
     {
         if (Gate::denies('create', new Post)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_create', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_create')]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
         $id = Auth::id();
@@ -56,7 +56,7 @@ class PostController extends Controller
         $model = new Post;
 
         if (Gate::denies('create', $model)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_create', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messages.not_create')]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
 
@@ -85,7 +85,7 @@ class PostController extends Controller
         if (!empty($data)) {
             return view('posts.post', compact('data'));
         }
-        Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
+        Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_found')]]);
         $prefix = Auth::id() === NULL ? 'all' : $this->routePrefix;
         return redirect()->route($prefix . '.posts');
 
@@ -95,10 +95,10 @@ class PostController extends Controller
     {
         $post = Post::find($id);
         if (empty($post)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_found')]]);
             return redirect()->route($this->routePrefix . '.posts');
         } elseif (Gate::denies('update', $post)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_update', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_update')]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
 
@@ -113,11 +113,11 @@ class PostController extends Controller
         $model = new Post;
         $model = $model->find($request->get('post_id'));
         if (empty($model)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_found')]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
         if (Gate::denies('update', $model)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_update', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_update')]]);
             return redirect()->route($this->routePrefix . '.posts');
         }
 
@@ -138,14 +138,14 @@ class PostController extends Controller
     {
         $model = Post::find($id);
         if (empty($model)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_found')]]);
         } elseif (Gate::denies('destroy', $model)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_delete', ['subject' => 'post'])]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_delete')]]);
         } else {
             $model = Post::destroy($id);
         }
         if ($model === 0) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.unknown')]]);
+            Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.unknown')]]);
         }
         return redirect()->route($this->routePrefix . '.posts');
     }

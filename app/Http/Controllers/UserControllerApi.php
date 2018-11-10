@@ -13,11 +13,11 @@ class UserControllerApi extends Controller
     public function index(): JsonResponse
     {
         if (Gate::denies('view', new User)) {
-            return $this->jsonResponse(Lang::get('messages.not_view', ['subject' => 'users']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_view'), 400);
         }
         $model = User::all();
         if (!count($model)) {
-            return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'user']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_found'), 400);
         }
         return $this->jsonResponse($model, 200);
     }
@@ -25,7 +25,7 @@ class UserControllerApi extends Controller
     public function store(Request $request): JsonResponse
     {
         if (Gate::denies('create', new User)) {
-            return $this->jsonResponse(Lang::get('messages.not_create', ['subject' => 'user']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_create'), 400);
         }
         $user = new User();
         $validateResult = $user->validator($request->post(), 0, [
@@ -40,17 +40,17 @@ class UserControllerApi extends Controller
         $userParams = $this->trim($request->post());
         $user->addModel($userParams);
         $user->save();
-        return $this->jsonResponse([Lang::get('messages.create', ['subject' => 'User']), $user->getAttributes()], 201);
+        return $this->jsonResponse([Lang::get('messagesUser.create'), $user->getAttributes()], 201);
     }
 
     public function show(int $id): JsonResponse
     {
         if (Gate::denies('view', new User)) {
-            return $this->jsonResponse(Lang::get('messages.not_view', ['subject' => 'users']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_view'), 400);
         }
         $model = User::find($id);
         if (empty($model)) {
-            return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'user']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_found'), 400);
         }
         return $this->jsonResponse($model, 200);
     }
@@ -58,11 +58,11 @@ class UserControllerApi extends Controller
     public function update(Request $request, int $id): JsonResponse
     {
         if (Gate::denies('update', new User)) {
-            return $this->jsonResponse(Lang::get('messages.not_update', ['subject' => 'user']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_update'), 400);
         }
         $user = User::find($id);
         if (empty($user)) {
-            return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'user']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_found'), 400);
         }
 
         $validateResult = $user->validator($request->post())->errors()->messages();
@@ -72,25 +72,25 @@ class UserControllerApi extends Controller
         $userParams = $this->trim($request->post());
         $user->addModel($userParams);
         $user->save();
-        return $this->jsonResponse([Lang::get('messages.update', ['subject' => 'User']), $user->getAttributes()], 201);
+        return $this->jsonResponse([Lang::get('messagesUser.update'), $user->getAttributes()], 201);
 
     }
 
     public function destroy(int $id): JsonResponse
     {
         if (Gate::denies('destroy', new User)) {
-            return $this->jsonResponse(Lang::get('messages.not_delete', ['subject' => 'user']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_delete'), 400);
         }
         $user = User::find($id);
         if (empty($user)) {
-            return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'user']), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.not_found'), 400);
         }
 
         $user = User::destroy($id);
         if ($user === 0) {
-            return $this->jsonResponse(Lang::get('messages.unknown'), 400);
+            return $this->jsonResponse(Lang::get('messagesUser.unknown'), 400);
         }
-        return $this->jsonResponse(Lang::get('messages.delete', ['subject' => 'User']), 201);
+        return $this->jsonResponse(Lang::get('messagesUser.delete'), 201);
 
     }
 

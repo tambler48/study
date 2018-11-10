@@ -20,7 +20,7 @@ class UserController extends Controller
     public function index(): object
     {
         if (Gate::denies('view', new User)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_view', ['subject' => 'users'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_view')]]);
             return redirect()->back();
         }
         $data = User::all();
@@ -35,7 +35,7 @@ class UserController extends Controller
     public function create(): object
     {
         if (Gate::denies('create', new User)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_create', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_create')]]);
             return redirect()->back();
         }
         $routePrefix = $this->routePrefix;
@@ -47,7 +47,7 @@ class UserController extends Controller
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         if (Gate::denies('create', new User)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_create', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_create')]]);
             return redirect()->back();
         }
         $user = new User();
@@ -69,14 +69,14 @@ class UserController extends Controller
     public function show(int $id): object
     {
         if (Gate::denies('view', new User)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_view', ['subject' => 'users'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_view')]]);
             return redirect()->back();
         }
         $data = User::find($id);
         if (!empty($data)) {
             return view('manage.user', compact('data'));
         }
-        Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'user'])]]);
+        Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_found')]]);
         $prefix = $this->routePrefix;
         return redirect()->route($prefix . '.index');
     }
@@ -87,12 +87,12 @@ class UserController extends Controller
     public function edit(int $id): object
     {
         if (Gate::denies('update', new User)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_update', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_update')]]);
             return redirect()->back();
         }
         $user = User::find($id);
         if (empty($user)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_found')]]);
             return redirect()->route($this->routePrefix . '.index');
         }
         $routePrefix = $this->routePrefix;
@@ -104,13 +104,13 @@ class UserController extends Controller
     public function update(Request $request, int $id): \Illuminate\Http\RedirectResponse
     {
         if (Gate::denies('update', new User)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_update', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_update')]]);
             return redirect()->back();
         }
         $user = new User();
         $user = $user->find($id);
         if (empty($user)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_found')]]);
             return redirect()->route($this->routePrefix . '.index');
         }
         $params = $this->trim($request->post());
@@ -124,17 +124,17 @@ class UserController extends Controller
     public function destroy($id): \Illuminate\Http\RedirectResponse
     {
         if (Gate::denies('destroy', new User)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_delete', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_delete')]]);
             return redirect()->back();
         }
         $user = User::find($id);
         if (empty($user)) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.not_found', ['subject' => 'user'])]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_found')]]);
             return redirect()->route($this->routePrefix . '.index');
         }
         $user = User::destroy($id);
         if ($user === 0) {
-            Session::flash('alert', ['Warning' => [Lang::get('messages.unknown')]]);
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.unknown')]]);
         }
         return redirect()->route($this->routePrefix . '.index');
     }

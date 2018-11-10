@@ -15,7 +15,7 @@ class PostControllerApi extends Controller
     {
         $model = Post::all();
         if (!count($model)) {
-            return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'post']), 400);
+            return $this->jsonResponse(Lang::get('messagesPost.not_found'), 400);
         }
         return $this->jsonResponse($model, 200);
     }
@@ -26,7 +26,7 @@ class PostControllerApi extends Controller
         $model = new Post;
 
         if (Gate::denies('create', $model)) {
-            return $this->jsonResponse(Lang::get('messages.not_create', ['subject' => 'post']), 400);
+            return $this->jsonResponse(Lang::get('messagesPost.not_create'), 400);
         }
 
         $model->addPost($post);
@@ -41,7 +41,7 @@ class PostControllerApi extends Controller
         }
         $model->timestamps = false;
         $model->save();
-        return $this->jsonResponse([Lang::get('messages.create', ['subject' => 'Post']), $model], 201);
+        return $this->jsonResponse([Lang::get('messagesPost.create'), $model], 201);
     }
 
     public function show($id): JsonResponse
@@ -50,7 +50,7 @@ class PostControllerApi extends Controller
         if (!empty($data)) {
             return $this->jsonResponse($data, 200);
         }
-        return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'post']), 400);
+        return $this->jsonResponse(Lang::get('messagesPost.not_found'), 400);
     }
 
     public function update(Request $request, $id): JsonResponse
@@ -59,11 +59,11 @@ class PostControllerApi extends Controller
         $model = $model->find($id);
 
         if (Gate::denies('update', $model)) {
-            return $this->jsonResponse(Lang::get('messages.not_update', ['subject' => 'post']), 400);
+            return $this->jsonResponse(Lang::get('messagesPost.not_update'), 400);
         }
 
         if (empty($model)) {
-            return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'post']), 400);
+            return $this->jsonResponse(Lang::get('messagesPost.not_found'), 400);
         }
 
         $post = $this->trim($request->post());
@@ -75,7 +75,7 @@ class PostControllerApi extends Controller
         $model->timestamps = false;
         $model->save();
 
-        return $this->jsonResponse([Lang::get('messages.update', ['subject' => 'Post']), $model], 201);
+        return $this->jsonResponse([Lang::get('messagesPost.update'), $model], 201);
 
     }
 
@@ -83,17 +83,17 @@ class PostControllerApi extends Controller
     {
         $model = Post::find($id);
         if (empty($model)) {
-            return $this->jsonResponse(Lang::get('messages.not_found', ['subject' => 'post']), 400);
+            return $this->jsonResponse(Lang::get('messagesPost.not_found'), 400);
         }
         if (Gate::denies('destroy', $model)) {
-            return $this->jsonResponse(Lang::get('messages.not_delete', ['subject' => 'post']), 400);
+            return $this->jsonResponse(Lang::get('messagesPost.not_delete'), 400);
         }
         $model = Post::destroy($id);
 
         if ($model === 0) {
-            return $this->jsonResponse(Lang::get('messages.unknown'), 400);
+            return $this->jsonResponse(Lang::get('messagesPost.unknown'), 400);
         }
-        return $this->jsonResponse(Lang::get('messages.delete', ['subject' => 'Post']), 201);
+        return $this->jsonResponse(Lang::get('messagesPost.delete'), 201);
     }
 
 }
