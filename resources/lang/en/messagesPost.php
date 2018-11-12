@@ -2,6 +2,13 @@
 
 return [
 
+    'title_list' => 'List of posts',
+    'title_create' => 'Create post',
+    'title_edit' => 'Edit post',
+
+    'form_head' => 'Header Post',
+    'form_body' => 'Body Post',
+
     'create' => 'Post successfully created.',
     'update' => 'Post successfully updated.',
     'delete' => 'Post successfully deleted.',

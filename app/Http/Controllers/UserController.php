@@ -24,7 +24,7 @@ class UserController extends Controller
             return redirect()->back();
         }
         $data = User::all();
-        $title = 'List of users';
+        $title = Lang::get('messagesUser.title_list');
         $routePrefix = $this->routePrefix;
         return view($routePrefix . '.block', compact('data', 'title', 'routePrefix'));
     }
@@ -40,7 +40,7 @@ class UserController extends Controller
         }
         $routePrefix = $this->routePrefix;
         $roles = Role::getRoles();
-        $title = 'Create User';
+        $title = Lang::get('messagesUser.title_create');
         return view('auth.register', compact('routePrefix', 'roles', 'title'));
     }
 
@@ -97,7 +97,7 @@ class UserController extends Controller
         }
         $routePrefix = $this->routePrefix;
         $roles = Role::getRoles();
-        $title = 'Update Post';
+        $title = Lang::get('messagesUser.title_edit');
         return view('manage.editUser', compact('routePrefix', 'roles', 'user', 'title'));
     }
 

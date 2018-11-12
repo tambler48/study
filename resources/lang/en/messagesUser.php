@@ -2,6 +2,10 @@
 
 return [
 
+    'title_list' => 'List of users',
+    'title_create' => 'Create User',
+    'title_edit' => 'Edit user',
+
     'create' => 'User successfully created.',
     'update' => 'User successfully updated.',
     'delete' => 'User successfully deleted.',

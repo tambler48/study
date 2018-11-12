@@ -4,7 +4,7 @@
 
     @can('create', new \App\User())
         <div class="card-title">
-            <a href="{{route($routePrefix.'.create')}}" class="btn btn-success">{{__('Create User')}}</a>
+            <a href="{{route($routePrefix.'.create')}}" class="btn btn-success">{{Lang::get('messagesUser.title_create')}}</a>
         </div>
     @endcan
 

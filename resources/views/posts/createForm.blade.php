@@ -5,11 +5,11 @@
         {{csrf_field()}}
         <input type="hidden" name="user_id" value="{{$id}}">
         <div class="form-group">
-            <label>{{__('Header Post')}}</label>
+            <label>{{Lang::get('messagesPost.form_head')}}</label>
             <input required name="header" type="text" class="form-control" >
         </div>
         <div class="form-group">
-            <label>{{__('Body Post')}}</label>
+            <label>{{Lang::get('messagesPost.form_body')}}</label>
             <textarea required name="body" class="form-control" rows="3"></textarea>
         </div>
         <div class="form-group">

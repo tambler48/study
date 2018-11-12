@@ -18,7 +18,7 @@ class PostController extends Controller
     public function all(): \Illuminate\View\View
     {
         $data = Post::all();
-        $title = 'List of posts';
+        $title = Lang::get('messagesPost.title_list');
         $routePrefix = 'all';
         $alert = Session::pull('alert');
         return view('posts.block', compact('data', 'title', 'routePrefix', 'alert'));
@@ -30,7 +30,7 @@ class PostController extends Controller
         $user = Auth::user();
         $user_id = $user->id;
         $user_role = $user->role_id;
-        $title = 'List of posts';
+        $title = Lang::get('messagesPost.title_list');
         $routePrefix = $this->routePrefix;
         return view('posts.block', compact('data', 'title', 'routePrefix', 'user_id', 'user_role'));
     }
@@ -45,7 +45,7 @@ class PostController extends Controller
             return redirect()->route($this->routePrefix . '.posts');
         }
         $id = Auth::id();
-        $title = 'Create Post';
+        $title = Lang::get('messagesPost.title_create');
         $routePrefix = $this->routePrefix;
         return view('posts.createForm', compact('id', 'title', 'routePrefix'));
     }
@@ -103,7 +103,7 @@ class PostController extends Controller
         }
 
         $id = Auth::id();
-        $title = 'Edit Post';
+        $title = Lang::get('messagesPost.title_edit');
         $routePrefix = $this->routePrefix;
         return view('posts.editForm', compact('post', 'id', 'title', 'routePrefix'));
     }
