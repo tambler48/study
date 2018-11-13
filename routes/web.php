@@ -23,6 +23,8 @@ Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('posts/edit/{id?}', 'PostController@editForm')->name('user.edit');
     Route::post('posts/edit', 'PostController@update');
     Route::resource('manage', 'UserController');
+    Route::get('manage/{manage}/remove', 'UserController@remove')->name('manage.remove');
+    Route::get('manage/{manage}/restore', 'UserController@restore')->name('manage.restore');
 });
 
 

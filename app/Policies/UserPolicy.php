@@ -11,8 +11,8 @@ class UserPolicy
     //use HandlesAuthorization;
 
     protected $operations = [
-        Role::ADMIN => ['view', 'create', 'update',],
-        Role::Moderator => ['view',],
+        Role::ADMIN => ['view', 'create', 'update', 'remove', 'restore',],
+        Role::Moderator => ['view', 'remove', ],
     ];
     /*
     * для хранения операций доступных текущему пользователю
@@ -22,9 +22,6 @@ class UserPolicy
     public function before(User $user): ?bool
     {
         $role = $user->hasOne('App\Role', 'id', 'role_id')->getResults()->name;
-        if ($role === Role::ADMIN) {
-            return true;
-        }
         if (!array_key_exists($role, $this->operations)) {
             return false;
         }
@@ -62,4 +59,29 @@ class UserPolicy
     {
         return $this->update($user, $model);
     }
+
+    public function remove(User $user, User $model): bool
+    {
+        if($model->active === 0){
+            return false;
+        }
+
+        if (in_array('remove', $this->roleOperates)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function restore(User $user, User $model): bool
+    {
+        if($model->active === 1){
+            return false;
+        }
+
+        if (in_array('restore', $this->roleOperates)) {
+            return true;
+        }
+        return false;
+    }
+
 }
