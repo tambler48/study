@@ -3,7 +3,7 @@
 @section('block')
     @if ($user_role === 1 || $user_role === 2 || $user_role === 3)
         <div class="card-title">
-            <a href="{{route($routePrefix.'.new')}}" class="btn btn-success">Создать запись</a>
+            <a href="{{route($routePrefix.'.new')}}" class="btn btn-success">{{Lang::get('messagesPost.title_create')}}</a>
         </div>
     @endif
     <div class="row">
@@ -13,11 +13,11 @@
                     <a href="#"><img class="card-img-top" src="http://placehold.it/700x400" alt=""></a>
                     <div class="card-body">
 
-                        @if ($item->user_id === $user_id || $user_role === 1 || $user_role === 2)
-                            <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">Редактировать</a>
+                        @can('update', new \App\User())
+                            <a href="{{route($routePrefix.'.edit', ['id' => $item->id])}}" class="text-success">{{__('Edit')}}</a>
                             <a href="{{route($routePrefix.'.unset',['id' => $item->id])}}"
-                               class="text-danger">Удалить</a>
-                        @endif
+                               class="text-danger">{{__('Delete')}}</a>
+                        @endcan
 
                         <h4 class="card-title">
                             <a href="{{route($routePrefix.'.post', ['id' => $item->id])}}">{{mb_strlen($item->header) < 50 ? $item->header : mb_substr($item->header, 0, 50).'...'}}</a>

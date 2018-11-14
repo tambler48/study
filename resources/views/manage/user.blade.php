@@ -4,10 +4,10 @@
     <table class="table">
         <thead class="thead-light">
         <tr>
-            <th scope="col">Username</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th scope="col">Api token</th>
+            <th scope="col">{{__('Name')}}</th>
+            <th scope="col">{{__('E-Mail Address')}}</th>
+            <th scope="col">{{__('Role')}}</th>
+            <th scope="col">{{__('Api token')}}</th>
         </tr>
         </thead>
         <tbody>

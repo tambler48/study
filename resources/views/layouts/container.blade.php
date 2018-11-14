@@ -22,7 +22,7 @@
 @section('content')
 <div class="container">
     <h1 class="my-4">
-        {{ $title ?? ''}}
+        {{ isset($title) ? $title : '' }}
     </h1>
 
     @yield('block')

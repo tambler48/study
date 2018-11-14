@@ -29,6 +29,15 @@ Route::prefix('user')->middleware('auth')->group(function () {
 Route::get('/posts', 'PostController@all')->name('all.posts');
 Route::get('/posts/{id}', 'PostController@show')->name('all.post');
 
+Route::get('setlocale/{name}', function(string $name){
+    $response = redirect()->back();
+    $locales = \Config::get('app.locales');
+    if (in_array($name, $locales, true)) {
+        $response->cookie(Cookie::forever('locale', $name));
+    }
+    return $response;
+})->name('setlocale');
+
 
 Route::get('/', function () {
     return view('welcome');

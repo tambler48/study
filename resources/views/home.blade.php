@@ -26,18 +26,18 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">{{__('Homepage')}}</div>
 
                 <div class="card-body">
 
-                    Добро пожаловать, {{Auth::user()->name}}
+                    {{ __('Hello!').' '.Auth::user()->name}}
                         <div>
-                            <a href="{{route('user.posts')}}">Просмотр записей</a>
+                            <a href="{{route('user.posts')}}">{{__('View posts')}}</a>
                         </div>
 
-                        @can('look', new \App\User())
+                        @can('view', new \App\User())
                         <div>
-                            <a href="{{route('manage.index')}}">Просмотр пользователей</a>
+                            <a href="{{route('manage.index')}}">{{__('View users')}}</a>
                         </div>
                             @endcan
 
