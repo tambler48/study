@@ -66,7 +66,7 @@ class UserPolicy
     public function remove(User $user, User $model): bool
     {
         if($model->active === 1 && in_array('remove', $this->roleOperates)){
-            return false;
+            return true;
         }
         return false;
     }
