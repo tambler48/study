@@ -31,18 +31,12 @@ class UserPolicy
 
     public function view(User $user): bool
     {
-        if (in_array('view', $this->roleOperates)) {
-            return true;
-        }
-        return false;
+        return in_array('view', $this->roleOperates);
     }
 
     public function create(User $user): bool
     {
-        if (in_array('create', $this->roleOperates)) {
-            return true;
-        }
-        return false;
+        return in_array('create', $this->roleOperates);
     }
 
     public function update(User $user, User $model): bool
@@ -57,26 +51,17 @@ class UserPolicy
 
     public function destroy(User $user, User $model): bool
     {
-        if (in_array('destroy', $this->roleOperates)) {
-            return true;
-        }
-        return false;
+        return in_array('destroy', $this->roleOperates);
     }
 
     public function remove(User $user, User $model): bool
     {
-        if($model->active === 1 && in_array('remove', $this->roleOperates)){
-            return true;
-        }
-        return false;
+        return $model->active === 1 && in_array('remove', $this->roleOperates);
     }
 
     public function restore(User $user, User $model): bool
     {
-        if($model->active === 0 && in_array('restore', $this->roleOperates)){
-            return true;
-        }
-        return false;
+        return $model->active === 0 && in_array('restore', $this->roleOperates);
     }
 
 }

@@ -36,10 +36,7 @@ class PostPolicy
 
     public function create(User $user): bool
     {
-        if (in_array('create', $this->roleOperates)) {
-            return true;
-        }
-        return false;
+        return in_array('create', $this->roleOperates);
     }
 
     public function update(User $user, Post $post): bool
