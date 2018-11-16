@@ -95,7 +95,7 @@ class UserControllerApi extends Controller
     }
 
 
-    public function remove($id)
+    public function remove(int $id): JsonResponse
     {
         $user = User::find($id);
         if (empty($user)) {
@@ -114,7 +114,7 @@ class UserControllerApi extends Controller
 
     }
 
-    public function restore($id)
+    public function restore(int $id): JsonResponse
     {
         $user = User::find($id);
         if (empty($user)) {

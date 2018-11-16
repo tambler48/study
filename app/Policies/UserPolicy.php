@@ -11,7 +11,7 @@ class UserPolicy
     //use HandlesAuthorization;
 
     protected $operations = [
-        Role::ADMIN => ['view', 'create', 'update', 'remove', 'restore',],
+        Role::ADMIN => ['view', 'create', 'update', 'destroy', 'remove', 'restore',],
         Role::Moderator => ['view', 'remove', ],
     ];
     /*
@@ -57,28 +57,23 @@ class UserPolicy
 
     public function destroy(User $user, User $model): bool
     {
-        return $this->update($user, $model);
+        if (in_array('destroy', $this->roleOperates)) {
+            return true;
+        }
+        return false;
     }
 
     public function remove(User $user, User $model): bool
     {
-        if($model->active === 0){
+        if($model->active === 1 && in_array('remove', $this->roleOperates)){
             return false;
-        }
-
-        if (in_array('remove', $this->roleOperates)) {
-            return true;
         }
         return false;
     }
 
     public function restore(User $user, User $model): bool
     {
-        if($model->active === 1){
-            return false;
-        }
-
-        if (in_array('restore', $this->roleOperates)) {
+        if($model->active === 0 && in_array('restore', $this->roleOperates)){
             return true;
         }
         return false;

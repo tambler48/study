@@ -12,9 +12,9 @@ class PostPolicy
     //use HandlesAuthorization;
 
     protected $operations = [
-        Role::ADMIN => ['create', 'update'],
-        Role::Moderator => ['create', 'update'],
-        Role::User => ['create', 'update_own'],
+        Role::ADMIN => ['create', 'update', 'destroy'],
+        Role::Moderator => ['create', 'update', 'destroy'],
+        Role::User => ['create', 'update_own', 'destroy_own'],
     ];
     /*
      * для хранения операций доступных текущему пользователю
@@ -54,7 +54,12 @@ class PostPolicy
 
     public function destroy(User $user, Post $post): bool
     {
-        return $this->update($user, $post);
+        if (in_array('destroy', $this->roleOperates)) {
+            return true;
+        } elseif (in_array('destroy_own', $this->roleOperates) && $user->id === $post->user_id) {
+            return true;
+        }
+        return false;
     }
 
 }

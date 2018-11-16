@@ -121,7 +121,7 @@ class UserController extends Controller
         return redirect()->route($this->routePrefix . '.index');
     }
 
-    public function destroy($id): \Illuminate\Http\RedirectResponse
+    public function destroy(int $id): \Illuminate\Http\RedirectResponse
     {
         if (Gate::denies('destroy', new User)) {
             Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_delete')]]);
@@ -139,7 +139,7 @@ class UserController extends Controller
         return redirect()->route($this->routePrefix . '.index');
     }
 
-    public function remove($id)
+    public function remove(int $id): \Illuminate\Http\RedirectResponse
     {
         $user = User::find($id);
         if (empty($user)) {
@@ -160,7 +160,7 @@ class UserController extends Controller
 
     }
 
-    public function restore($id)
+    public function restore(int $id): \Illuminate\Http\RedirectResponse
     {
         $user = User::find($id);
         if (empty($user)) {
