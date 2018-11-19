@@ -95,4 +95,41 @@ class UserControllerApi extends Controller
     }
 
 
+    public function remove(int $id): JsonResponse
+    {
+        $user = User::find($id);
+        if (empty($user)) {
+            return $this->jsonResponse(Lang::get('messagesUser.not_found'), 400);
+        }
+
+        if (Gate::denies('remove', $user)) {
+            return $this->jsonResponse(Lang::get('messagesUser.not_remove'), 400);
+        }
+
+        $user->active = false;
+        $user->timestamps = false;
+        $user->save();
+
+        return $this->jsonResponse(Lang::get('messagesUser.remove'), 201);
+
+    }
+
+    public function restore(int $id): JsonResponse
+    {
+        $user = User::find($id);
+        if (empty($user)) {
+            return $this->jsonResponse(Lang::get('messagesUser.not_found'), 400);
+        }
+
+        if (Gate::denies('restore', $user)) {
+            return $this->jsonResponse(Lang::get('messagesUser.not_restore'), 400);
+        }
+
+        $user->active = true;
+        $user->timestamps = false;
+        $user->save();
+
+        return $this->jsonResponse(Lang::get('messagesUser.restore'), 201);
+    }
+
 }

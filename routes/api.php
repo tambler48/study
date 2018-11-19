@@ -20,7 +20,8 @@ Route::post('logout', 'Auth\Api\LoginController@logout');
 
 Route::resource('posts', 'PostControllerApi')->middleware('auth:api');
 Route::resource('users', 'UserControllerApi')->middleware('auth:api');
-
+Route::get('users/{manage}/remove', 'UserControllerApi@remove')->middleware('auth:api')/*->name('users.remove')*/;
+Route::get('users/{manage}/restore', 'UserControllerApi@restore')->middleware('auth:api')/*->name('users.restore')*/;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();

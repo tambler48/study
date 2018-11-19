@@ -43,7 +43,7 @@ class LoginController extends Controller
     protected function validateLogin(Request $request): \Illuminate\Validation\Validator
     {
         return Validator::make($request->post(), [
-            $this->username() => ['required','string','exists:users,'.$this->username(),],
+            $this->username() => ['required','string','exists:users,'.$this->username().',active,1'],
             'password' => ['required', 'string'],
         ]);
     }

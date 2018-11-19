@@ -121,7 +121,7 @@ class UserController extends Controller
         return redirect()->route($this->routePrefix . '.index');
     }
 
-    public function destroy($id): \Illuminate\Http\RedirectResponse
+    public function destroy(int $id): \Illuminate\Http\RedirectResponse
     {
         if (Gate::denies('destroy', new User)) {
             Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_delete')]]);
@@ -138,4 +138,47 @@ class UserController extends Controller
         }
         return redirect()->route($this->routePrefix . '.index');
     }
+
+    public function remove(int $id): \Illuminate\Http\RedirectResponse
+    {
+        $user = User::find($id);
+        if (empty($user)) {
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_found')]]);
+            return redirect()->route($this->routePrefix . '.index');
+        }
+
+        if (Gate::denies('remove', $user)) {
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_remove')]]);
+            return redirect()->back();
+        }
+
+        $user->active = false;
+        $user->timestamps = false;
+        $user->save();
+
+        return redirect()->route($this->routePrefix . '.index');
+
+    }
+
+    public function restore(int $id): \Illuminate\Http\RedirectResponse
+    {
+        $user = User::find($id);
+        if (empty($user)) {
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_found')]]);
+            return redirect()->route($this->routePrefix . '.index');
+        }
+
+        if (Gate::denies('restore', $user)) {
+            Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_restore')]]);
+            return redirect()->back();
+        }
+
+        $user->active = true;
+        $user->timestamps = false;
+        $user->save();
+
+        return redirect()->route($this->routePrefix . '.index');
+
+    }
+
 }
