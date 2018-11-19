@@ -43,20 +43,17 @@ class PostPolicy
     {
         if (in_array('update', $this->roleOperates)) {
             return true;
-        } elseif (in_array('update_own', $this->roleOperates) && $user->id === $post->user_id) {
-            return true;
         }
-        return false;
+        return in_array('update_own', $this->roleOperates) && $user->id === $post->user_id;
     }
 
     public function destroy(User $user, Post $post): bool
     {
         if (in_array('destroy', $this->roleOperates)) {
             return true;
-        } elseif (in_array('destroy_own', $this->roleOperates) && $user->id === $post->user_id) {
-            return true;
         }
-        return false;
+        return in_array('destroy_own', $this->roleOperates) && $user->id === $post->user_id;
+
     }
 
 }
