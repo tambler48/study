@@ -70,7 +70,6 @@ class PostController extends Controller
         if (count($result)) {
             Session::flash('alert', $result);
         } else {
-            $model->timestamps = false;
             $model->save();
         }
         return redirect()->route($this->routePrefix . '.posts');
@@ -132,7 +131,6 @@ class PostController extends Controller
             return redirect()->route($this->routePrefix . '.posts');
         }
 
-        $model->timestamps = false;
         $model->save();
         return redirect()->route($this->routePrefix . '.posts');
     }

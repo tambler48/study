@@ -15,6 +15,8 @@ class Post extends Model
 {
     protected $fillable = ['user_id', 'header', 'body'];
 
+    public $timestamps = false;
+
     protected $validators = [
         'user_id' => ['exists:users,id',],
         'header' => ['bail', 'max:255', 'string',],

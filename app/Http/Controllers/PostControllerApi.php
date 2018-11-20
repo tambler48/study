@@ -39,7 +39,6 @@ class PostControllerApi extends Controller
         if (count($result)) {
             return $this->jsonResponse($result, 400);
         }
-        $model->timestamps = false;
         $model->save();
         return $this->jsonResponse([Lang::get('messagesPost.create'), $model], 201);
     }
@@ -72,7 +71,6 @@ class PostControllerApi extends Controller
         if (count($result)) {
             return $this->jsonResponse($result, 400);
         }
-        $model->timestamps = false;
         $model->save();
 
         return $this->jsonResponse([Lang::get('messagesPost.update'), $model], 201);
