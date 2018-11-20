@@ -27,7 +27,7 @@ class CommentController extends Controller
             Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_found')]]);
             return redirect()->route('user.posts');
         }
-        $data = Comment::select()->where('post_id','=',$id)->get();
+        $data = Comment::select()->where('post_id', '=', $id)->get();
         return $data;
     }
 

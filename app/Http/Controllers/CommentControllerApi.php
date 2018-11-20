@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Post;
 use App\Comment;
 use Lang;
@@ -10,20 +11,20 @@ use Gate;
 
 class CommentControllerApi extends Controller
 {
-    public function get(int $id): object
+    public function get(int $id): JsonResponse
     {
         $data = Post::find($id);
         if (empty($data)) {
             return $this->jsonResponse(Lang::get('messagesPost.not_found'), 400);
         }
-        $data = Comment::select()->where('post_id','=',$id)->get();
+        $data = Comment::select()->where('post_id', '=', $id)->get();
         if (!$data->count()) {
             $data = [Lang::get('messagesPost.not_found_comment')];
         }
         return $this->jsonResponse($data, 200);
     }
 
-    public function show(int $id): object
+    public function show(int $id): JsonResponse
     {
         $data = Comment::find($id);
         if (empty($data)) {
@@ -32,9 +33,8 @@ class CommentControllerApi extends Controller
         return $this->jsonResponse($data, 200);
     }
 
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-
         $comment = new Comment;
         if (Gate::denies('create', $comment)) {
             return $this->jsonResponse([Lang::get('messagesPost.not_add_comment')], 400);
@@ -56,7 +56,7 @@ class CommentControllerApi extends Controller
         return $this->jsonResponse([Lang::get('messagesPost.create_comment'), $comment], 201);
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, int $id): JsonResponse
     {
         $comment = new Comment;
         $comment = $comment->find($id);
@@ -66,7 +66,6 @@ class CommentControllerApi extends Controller
         if (Gate::denies('update', $comment)) {
             return $this->jsonResponse(Lang::get('messagesPost.not_update_comment'), 400);
         }
-
         $post = $this->trim($request->post());
         $comment->addContent($post);
         $result = $comment->validate();
@@ -78,7 +77,7 @@ class CommentControllerApi extends Controller
     }
 
 
-    public function destroy(int $id)
+    public function destroy(int $id): JsonResponse
     {
         $model = Comment::find($id);
         if (empty($model)) {
