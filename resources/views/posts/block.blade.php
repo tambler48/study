@@ -1,11 +1,11 @@
 @extends('layouts.container')
 
 @section('block')
-    @if ($user_role === 1 || $user_role === 2 || $user_role === 3)
+    @can('create', new \App\User())
         <div class="card-title">
             <a href="{{route($routePrefix.'.new')}}" class="btn btn-success">{{Lang::get('messagesPost.title_create')}}</a>
         </div>
-    @endif
+    @endcan
     <div class="row">
         @foreach($data as $item)
             <div class="col-lg-4 col-sm-6 portfolio-item">

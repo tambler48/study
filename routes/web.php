@@ -21,10 +21,17 @@ Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('posts/{id}', 'PostController@show')->name('user.post');
     Route::get('posts/unset/{id}', 'PostController@destroy')->name('user.unset');
     Route::get('posts/edit/{id?}', 'PostController@editForm')->name('user.edit');
-    Route::post('posts/edit', 'PostController@update');
+    Route::post('posts/edit/{id}', 'PostController@update');
+
     Route::resource('manage', 'UserController');
     Route::get('manage/{manage}/remove', 'UserController@remove')->name('manage.remove');
     Route::get('manage/{manage}/restore', 'UserController@restore')->name('manage.restore');
+
+    Route::post('comments', 'CommentController@store')->name('comment.store');
+    Route::delete('comments/{id}', 'CommentController@destroy')->name('comment.destroy');
+    Route::get('comments/{id}', 'CommentController@edit')->name('comment.edit');
+    Route::put('comments/{id}', 'CommentController@update')->name('comment.update');
+
 });
 
 
