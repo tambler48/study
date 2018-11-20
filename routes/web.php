@@ -27,10 +27,10 @@ Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('manage/{manage}/remove', 'UserController@remove')->name('manage.remove');
     Route::get('manage/{manage}/restore', 'UserController@restore')->name('manage.restore');
 
-    Route::post('comments', 'CommentController@store')->name('comment.store');
-    Route::delete('comments/{id}', 'CommentController@destroy')->name('comment.destroy');
-    Route::get('comments/{id}', 'CommentController@edit')->name('comment.edit');
-    Route::put('comments/{id}', 'CommentController@update')->name('comment.update');
+    Route::post('posts/comments', 'CommentController@store')->name('comment.store');
+    Route::delete('posts/comments/{id}', 'CommentController@destroy')->name('comment.destroy');
+    Route::get('posts/comments/{id}', 'CommentController@edit')->name('comment.edit');
+    Route::put('posts/comments/{id}', 'CommentController@update')->name('comment.update');
 
 });
 
