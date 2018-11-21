@@ -15,11 +15,11 @@ class CommentControllerApi extends Controller
     {
         $data = Post::find($id);
         if (empty($data)) {
-            return $this->jsonResponse(Lang::get('messagesPost.not_found'), 400);
+            return $this->jsonResponse('', 404);
         }
         $data = Comment::select()->where('post_id', '=', $id)->get();
         if (!$data->count()) {
-            $data = [Lang::get('messagesPost.not_found_comment')];
+            return $this->jsonResponse('', 404);
         }
         return $this->jsonResponse($data, 200);
     }
@@ -28,7 +28,7 @@ class CommentControllerApi extends Controller
     {
         $data = Comment::find($id);
         if (empty($data)) {
-            return $this->jsonResponse(Lang::get('messagesPost.not_found_comment'), 400);
+            return $this->jsonResponse('', 404);
         }
         return $this->jsonResponse($data, 200);
     }
@@ -37,7 +37,7 @@ class CommentControllerApi extends Controller
     {
         $comment = new Comment;
         if (Gate::denies('create', $comment)) {
-            return $this->jsonResponse([Lang::get('messagesPost.not_add_comment')], 400);
+            return $this->jsonResponse('', 403);
         }
         $post = $this->trim($request->post());
         $comment->addContent($post);
@@ -49,11 +49,10 @@ class CommentControllerApi extends Controller
         ]);
         $result = $comment->validate();
         if (count($result)) {
-            Session::flash('alert', $result);
-        } else {
-            $comment->save();
+            return $this->jsonResponse($result, 406);
         }
-        return $this->jsonResponse([Lang::get('messagesPost.create_comment'), $comment], 201);
+        $comment->save();
+        return $this->jsonResponse( $comment, 201);
     }
 
     public function update(Request $request, int $id): JsonResponse
@@ -61,19 +60,19 @@ class CommentControllerApi extends Controller
         $comment = new Comment;
         $comment = $comment->find($id);
         if (empty($comment)) {
-            return $this->jsonResponse(Lang::get('messagesPost.not_found_comment'), 400);
+            return $this->jsonResponse('', 404);
         }
         if (Gate::denies('update', $comment)) {
-            return $this->jsonResponse(Lang::get('messagesPost.not_update_comment'), 400);
+            return $this->jsonResponse('', 403);
         }
         $post = $this->trim($request->post());
         $comment->addContent($post);
         $result = $comment->validate();
         if (count($result)) {
-            return $this->jsonResponse($result, 400);
+            return $this->jsonResponse($result, 406);
         }
         $comment->save();
-        return $this->jsonResponse([Lang::get('messagesPost.update_comment'), $comment], 201);
+        return $this->jsonResponse( $comment, 201);
     }
 
 
@@ -81,15 +80,15 @@ class CommentControllerApi extends Controller
     {
         $model = Comment::find($id);
         if (empty($model)) {
-            return $this->jsonResponse(Lang::get('messagesPost.not_found_comment'), 400);
+            return $this->jsonResponse('', 404);
         } elseif (Gate::denies('destroy', $model)) {
-            return $this->jsonResponse(Lang::get('messagesPost.not_delete_comment'), 400);
+            return $this->jsonResponse('', 403);
         } else {
             $model = Comment::destroy($id);
         }
         if ($model === 0) {
-            return $this->jsonResponse(Lang::get('messagesPost.unknown'), 400);
+            return $this->jsonResponse('', 418);
         }
-        return $this->jsonResponse(Lang::get('messagesPost.delete_comment'), 201);
+        return $this->jsonResponse('', 204);
     }
 }

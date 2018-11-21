@@ -26,7 +26,7 @@ class User extends Authenticatable
         'password', 'remember_token', 'created_at', 'updated_at', 'email_verified_at'
     ];
 
-    protected function getValidators($id = 0)
+    protected function getValidators($id = 0): array
     {
         return [
             'name' => ['string', 'max:255'],
@@ -36,7 +36,7 @@ class User extends Authenticatable
         ];
     }
 
-    public static function generateToken()
+    public static function generateToken(): string
     {
         return str_random(60);
 
@@ -51,7 +51,7 @@ class User extends Authenticatable
         return Validator::make($data, $validators);
     }
 
-    public function addModel(array $data)
+    public function addModel(array $data): void
     {
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);

@@ -23,14 +23,14 @@ class Post extends Model
         'body' => ['string',],
     ];
 
-    public function addPost(array $post)
+    public function addPost(array $post): void
     {
         foreach ($post as $key => $value) {
             $this->$key = $value;
         }
     }
 
-    public function addValidate(array $valids)
+    public function addValidate(array $valids): void
     {
         $this->validators = array_merge_recursive($valids, $this->validators);
     }
