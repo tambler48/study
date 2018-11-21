@@ -33,6 +33,7 @@ class User extends Authenticatable
             'email' => ['string', 'email', 'max:255', 'unique:users,id,' . $id],
             'password' => ['string', 'min:6', 'confirmed'],
             'role_id' => ['exists:roles,id',],
+            'api_token' => ['string', 'unique:users,api_token'],
         ];
     }
 
