@@ -21,17 +21,24 @@ Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('posts/{id}', 'PostController@show')->name('user.post');
     Route::get('posts/unset/{id}', 'PostController@destroy')->name('user.unset');
     Route::get('posts/edit/{id?}', 'PostController@editForm')->name('user.edit');
-    Route::post('posts/edit', 'PostController@update');
+    Route::post('posts/edit/{id}', 'PostController@update');
+
     Route::resource('manage', 'UserController');
     Route::get('manage/{manage}/remove', 'UserController@remove')->name('manage.remove');
     Route::get('manage/{manage}/restore', 'UserController@restore')->name('manage.restore');
+
+    Route::post('posts/comments', 'CommentController@store')->name('comment.store');
+    Route::delete('posts/comments/{id}', 'CommentController@destroy')->name('comment.destroy');
+    Route::get('posts/comments/{id}', 'CommentController@edit')->name('comment.edit');
+    Route::put('posts/comments/{id}', 'CommentController@update')->name('comment.update');
+
 });
 
 
 Route::get('/posts', 'PostController@all')->name('all.posts');
 Route::get('/posts/{id}', 'PostController@show')->name('all.post');
 
-Route::get('setlocale/{name}', function(string $name){
+Route::get('setlocale/{name}', function (string $name) {
     $response = redirect()->back();
     $locales = \Config::get('app.locales');
     if (in_array($name, $locales, true)) {

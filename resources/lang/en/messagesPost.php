@@ -6,6 +6,16 @@ return [
     'title_create' => 'Create post',
     'title_edit' => 'Edit post',
 
+    'add_comment' => 'Adding a comment.',
+    'create_comment' => 'Comment successfully created.',
+    'update_comment' => 'Comment successfully updated.',
+    'delete_comment' => 'Comment successfully deleted.',
+    'not_add_comment' => 'You can not add comment.',
+    'write_comment' => 'Write your comment.',
+    'not_update_comment' => 'You can not update comment.',
+    'not_found_comment' => 'Not found comment.',
+    'not_delete_comment' => 'You can not delete comment.',
+
     'form_head' => 'Header Post',
     'form_body' => 'Body Post',
 

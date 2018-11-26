@@ -26,17 +26,18 @@ class User extends Authenticatable
         'password', 'remember_token', 'created_at', 'updated_at', 'email_verified_at'
     ];
 
-    protected function getValidators($id = 0)
+    protected function getValidators($id = 0): array
     {
         return [
             'name' => ['string', 'max:255'],
             'email' => ['string', 'email', 'max:255', 'unique:users,id,' . $id],
             'password' => ['string', 'min:6', 'confirmed'],
             'role_id' => ['exists:roles,id',],
+            'api_token' => ['string', 'unique:users,api_token'],
         ];
     }
 
-    public static function generateToken()
+    public static function generateToken(): string
     {
         return str_random(60);
 
@@ -51,7 +52,7 @@ class User extends Authenticatable
         return Validator::make($data, $validators);
     }
 
-    public function addModel(array $data)
+    public function addModel(array $data): void
     {
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);

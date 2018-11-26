@@ -6,6 +6,11 @@
             <h1 class="card-title">{{$data->header}}</h1>
             <p class="card-text">{{$data->body}}</p>
         </div>
+
     </div>
+
+    @include('posts.comment')
+    @yield('comments')
+
 @endsection
 

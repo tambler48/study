@@ -1,10 +1,9 @@
 @extends('layouts.container')
 @section('block')
-    <form method="POST" action="{{route($routePrefix.'.edit')}}">
+    <form method="POST" action="{{route($routePrefix.'.edit', ['id' => $post->id])}}">
         {{csrf_field()}}
 
         <input type="hidden" name="user_id" value="{{$id}} ">
-        <input type="hidden" name="post_id" value="{{$post->id}}">
         <div class="form-group">
             <label>{{Lang::get('messagesPost.form_head')}}</label>
             <input required name="header" type="text" class="form-control" value="{{$post->header}}">

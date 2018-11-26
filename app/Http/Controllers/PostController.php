@@ -70,7 +70,6 @@ class PostController extends Controller
         if (count($result)) {
             Session::flash('alert', $result);
         } else {
-            $model->timestamps = false;
             $model->save();
         }
         return redirect()->route($this->routePrefix . '.posts');
@@ -81,9 +80,12 @@ class PostController extends Controller
      */
     public function show(int $id): object
     {
+        $comments = new \App\Http\Controllers\CommentController;
+        $comments = $comments->get($id);
+
         $data = Post::find($id);
         if (!empty($data)) {
-            return view('posts.post', compact('data'));
+            return view('posts.post', compact('data', 'comments'));
         }
         Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_found')]]);
         $prefix = Auth::id() === NULL ? 'all' : $this->routePrefix;
@@ -108,10 +110,10 @@ class PostController extends Controller
         return view('posts.editForm', compact('post', 'id', 'title', 'routePrefix'));
     }
 
-    public function update(Request $request): \Illuminate\Http\RedirectResponse
+    public function update(Request $request, int $id): \Illuminate\Http\RedirectResponse
     {
         $model = new Post;
-        $model = $model->find($request->get('post_id'));
+        $model = $model->find($id);
         if (empty($model)) {
             Session::flash('alert', [Lang::get('messagesPost.warning') => [Lang::get('messagesPost.not_found')]]);
             return redirect()->route($this->routePrefix . '.posts');
@@ -129,7 +131,6 @@ class PostController extends Controller
             return redirect()->route($this->routePrefix . '.posts');
         }
 
-        $model->timestamps = false;
         $model->save();
         return redirect()->route($this->routePrefix . '.posts');
     }
