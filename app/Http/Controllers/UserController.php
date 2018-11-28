@@ -50,6 +50,7 @@ class UserController extends Controller
             Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_create')]]);
             return redirect()->back();
         }
+        dd($request);
         $user = new User();
         $userData = $user->validator($request->post(), 0, [
             'name' => ['required',],
@@ -72,6 +73,7 @@ class UserController extends Controller
             Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_view')]]);
             return redirect()->back();
         }
+
         $data = User::find($id);
         if (!empty($data)) {
             return view('manage.user', compact('data'));
