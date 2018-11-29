@@ -6,6 +6,7 @@ use App\User;
 use App\Role;
 use Gate;
 use Lang;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 
@@ -50,15 +51,17 @@ class UserController extends Controller
             Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_create')]]);
             return redirect()->back();
         }
-        $user = new User();
-        $userData = $user->validator($request->post(), 0, [
-            'name' => ['required',],
-            'email' => ['required',],
-            'password' => ['required',],
-            'role_id' => ['required',],
-        ])->validate();
 
-        $user->addModel($userData);
+        $user = new User();
+        $params = $this->trim($request->post());
+        $user->addModel($params);
+        $errors = $user->validate();
+        if (count($errors)) {
+            return redirect()->back();
+        }
+        $user->password = Hash::make($user->password);
+        $user->__unset('password_confirmation');
+
         $user->save();
         return redirect()->route($this->routePrefix . '.index');
     }
@@ -72,6 +75,7 @@ class UserController extends Controller
             Session::flash('alert', [Lang::get('messagesUser.warning') => [Lang::get('messagesUser.not_view')]]);
             return redirect()->back();
         }
+
         $data = User::find($id);
         if (!empty($data)) {
             return view('manage.user', compact('data'));
@@ -114,9 +118,13 @@ class UserController extends Controller
             return redirect()->route($this->routePrefix . '.index');
         }
         $params = $this->trim($request->post());
-        $params = $user->validator($params, $id)->validate();
         $user->addModel($params);
-        $user->timestamps = false;
+        $errors = $user->validate($id);
+        if (count($errors)) {
+            return redirect()->back();
+        }
+        $user->password = Hash::make($user->password);
+        $user->__unset('password_confirmation');
         $user->save();
         return redirect()->route($this->routePrefix . '.index');
     }

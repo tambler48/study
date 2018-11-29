@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\User;
 use Gate;
-use Lang;
+use Illuminate\Support\Facades\Hash;
 
 class UserControllerApi extends Controller
 {
@@ -28,17 +28,14 @@ class UserControllerApi extends Controller
             return $this->jsonResponse('', 403);
         }
         $user = new User();
-        $validateResult = $user->validator($request->post(), 0, [
-            'name' => ['required',],
-            'email' => ['required',],
-            'password' => ['required',],
-        ])->errors()->messages();
-
+        $params = $this->trim($request->post());
+        $user->addModel($params);
+        $validateResult = $user->validate();
         if (count($validateResult)) {
             return $this->jsonResponse($validateResult, 406);
         }
-        $userParams = $this->trim($request->post());
-        $user->addModel($userParams);
+        $user->password = Hash::make($user->password);
+        $user->__unset('password_confirmation');
         $user->save();
         return $this->jsonResponse( $user->getAttributes(), 201);
     }
@@ -65,12 +62,14 @@ class UserControllerApi extends Controller
             return $this->jsonResponse('', 404);
         }
 
-        $validateResult = $user->validator($request->post())->errors()->messages();
+        $params = $this->trim($request->post());
+        $user->addModel($params);
+        $validateResult = $user->validate($id);
         if (count($validateResult)) {
             return $this->jsonResponse($validateResult, 406);
         }
-        $userParams = $this->trim($request->post());
-        $user->addModel($userParams);
+        $user->password = Hash::make($user->password);
+        $user->__unset('password_confirmation');
         $user->save();
         return $this->jsonResponse( $user->getAttributes(), 201);
 
