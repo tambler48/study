@@ -11,39 +11,21 @@ namespace Tests\Unit;
 use App\Http\Controllers\UserController;
 use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
-use Mockery;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\User;
-use App\Role;
-use Gate;
-use Lang;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 
 
 class UserControllerTest extends TestCase
 {
-   /* public function setUp()
+    public function setUp()
     {
         $this->_testable = new Testable();
-    }*/
-
-    public function testUsers(){
-
-        dd(DB::table('users')->insert([
-            'name' => 'testUser1',
-            'role_id' => '1',
-            'active' => true,
-            'email' => 'wwe@test.user',
-            'password' => bcrypt('12345q'),
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
-        ]));
-
-
     }
+
 
     public function testStore()
     {
@@ -51,8 +33,6 @@ class UserControllerTest extends TestCase
         $this->user = new User();
         $this->user = $this->user::find(1);
         $this->actingAs($this->user);
-
-
         $request=$this->post('user/manage', [
             "_token" => csrf_field(),
             "name" => "New User",
@@ -66,15 +46,7 @@ class UserControllerTest extends TestCase
         dd($request);
         $userContr = new UserController();
         dd($userContr->store($request));
-        /*
-               [
-                   "name" => "New User",
-                   "email" => "7b2qdasad@mail.com",
-                   "password" => "12345q",
-                   "password_confirmation" => "12345q",
-                   "role_id" => "3",
-               ]
-               */
+
     }
 
     /**
