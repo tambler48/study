@@ -14,7 +14,6 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Illuminate\Support\Facades\Hash;
 
 class UserTest extends TestCase
 {
@@ -25,66 +24,83 @@ class UserTest extends TestCase
     {
         parent::setUp();
         $this->seed('DatabaseSeeder');
-        //dd($this->getConnection());
-    }
-
-    /**
-     * @dataProvider showProvider
-     * @param $authUser
-     * @param $showUser
-     * @param $answer
-     */
-    public function testValidate($authUser, $showUser, $answer)
-    {
-
-
-        $this->user = new User();
-        $this->user = $this->user::find($authUser);
-        $this->actingAs($this->user);
-        $this->assertTrue(true);
-    }
-
-    /**
-     *  Data provider for testShow method
-     */
-    public static function showProvider()
-    {
-        return [
-            ['1', '1', 'Illuminate\View\View',],
-            ['1', '100', 'Illuminate\Http\RedirectResponse',],
-            ['3', '100', 'Illuminate\Http\RedirectResponse',],
-            ['3', '1', 'Illuminate\Http\RedirectResponse',],
-        ];
     }
 
     /**
      * @param $testData
      * @dataProvider addModelProvider
      */
-    public function testAddModel($testData)
+    public function testAddModel(array $testData)
     {
         $this->user = new User();
         $this->user->addModel($testData);
-        $this->assertTrue(Hash::check($testData['password'], $this->user->password));
-        unset($testData['password']);
-        foreach ($testData as $fieldName => $fieldValue){
+        foreach ($testData as $fieldName => $fieldValue) {
             $this->assertSame($fieldValue, $this->user->$fieldName);
         }
     }
 
-    public function testValidator()
-    {
-
-    }
-
     public function testGenerateToken()
     {
-
+        $this->user = new User();
+        $token = $this->user->generateToken();
+        $this->assertSame(60, mb_strlen($token));
     }
 
+    /**
+     * @param $testData
+     * @dataProvider validateProvider
+     */
+    public function testValidate(array $testData, array $answer)
+    {
+        $this->user = new User();
+        $this->user->addModel($testData);
+        $result = $this->user->validate();
+        $this->assertSame(0, count(array_diff_key($result, $answer)));
+        $this->assertSame(0, count(array_diff_key($answer, $result)));
+    }
 
     /**
-     *  Data provider for testShow method
+     *  Data provider for testValidate method
+     */
+    public static function validateProvider()
+    {
+        return [
+            [[
+                "name" => "New User",
+                "email" => "7b2qdasad@mail.com",
+                "password" => "12345q",
+                "role_id" => "3",
+            ], [
+                "password" => true,
+            ]],
+            [[
+                "name" => "Dave",
+                "email" => "hello@gmail.com",
+                "password" => "newbie1q",
+                "password_confirmation" => "newbie1q",
+                "role_id" => "2",
+            ], []],
+            [[
+                "name" => "John",
+                "email" => "newusermail.com",
+                "password" => "987buy085",
+                "role_id" => "1",
+            ], [
+                "email" => true,
+                "password" => true,
+            ]],
+            [[
+                "name" => "Old User",
+                "role_id" => "3",
+            ], [
+                "email" => true,
+                "password" => true,
+            ]],
+        ];
+    }
+
+    /**
+     *  Data provider for addModel method
      */
     public static function addModelProvider()
     {
