@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Support\Facades\Hash;
+
 
 /**
  * App\User
@@ -29,42 +29,38 @@ class User extends Authenticatable
     protected function getValidators($id = 0): array
     {
         return [
-            'name' => ['string', 'max:255'],
-            'email' => ['string', 'email', 'max:255', 'unique:users,id,' . $id],
-            'password' => ['string', 'min:6', 'confirmed'],
-            'role_id' => ['exists:roles,id',],
-            'api_token' => ['string', 'unique:users,api_token'],
+            'name' => ['required','string', 'max:255'],
+            'email' => ['required','string', 'email', 'max:255', 'unique:users,id,' . $id],
+            'password' => ['required','string', 'min:6', 'confirmed'],
+            'role_id' => ['required','exists:roles,id',],
+            'api_token' => ['string', 'nullable', 'unique:users,api_token,' . $id],
         ];
     }
 
     public static function generateToken(): string
     {
         return str_random(60);
-
     }
 
-    public function validator(array $data, $id = 0, array $valids = [])
+/*    public function validator(array $data, $id = 0, array $valids = []) Пока не нужен
     {
         $validators = $this->getValidators($id); // устанавливает проверку уникальности email кроме выбранного id
         if (count($valids)) {
             $validators = array_merge_recursive($valids, $validators); //добавляет дополнительные правила к валидатору
         }
         return Validator::make($data, $validators);
-    }
+    }*/
 
     public function addModel(array $data): void
     {
-        if (isset($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        }
         foreach ($data as $key => $value) {
             $this->$key = $value;
         }
     }
 
-    public function validate(): array
+    public function validate($id = 0): array
     {
-        $validator = Validator::make($this->getAttributes(), $this->validators);
+        $validator = Validator::make($this->getAttributes(), $this->getValidators($id));
         return $validator->errors()->messages();
     }
 
