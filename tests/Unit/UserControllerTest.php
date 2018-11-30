@@ -13,7 +13,6 @@ use Tests\TestCase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
