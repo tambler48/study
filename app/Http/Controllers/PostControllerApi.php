@@ -30,11 +30,6 @@ class PostControllerApi extends Controller
         }
 
         $model->addPost($post);
-        $model->addValidate([
-            'user_id' => ['required',],
-            'header' => ['required',],
-            'body' => ['required',],
-        ]);
         $result = $model->validate();
         if (count($result)) {
             return $this->jsonResponse($result, 406);

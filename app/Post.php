@@ -18,9 +18,9 @@ class Post extends Model
     public $timestamps = false;
 
     protected $validators = [
-        'user_id' => ['exists:users,id',],
-        'header' => ['bail', 'max:255', 'string',],
-        'body' => ['string',],
+        'user_id' => ['required', 'exists:users,id',],
+        'header' => ['required', 'bail', 'max:255', 'string',],
+        'body' => ['required', 'string',],
     ];
 
     public function addPost(array $post): void
@@ -28,11 +28,6 @@ class Post extends Model
         foreach ($post as $key => $value) {
             $this->$key = $value;
         }
-    }
-
-    public function addValidate(array $valids): void
-    {
-        $this->validators = array_merge_recursive($valids, $this->validators);
     }
 
     public function validate(): array
