@@ -22,13 +22,13 @@ class UserControllerTest extends TestCase
 {
     public function setUp()
     {
-        $this->_testable = new Testable();
+        parent::setUp();
+        $this->seed('DatabaseSeeder');
     }
 
 
     public function testStore()
     {
-
         $this->user = new User();
         $this->user = $this->user::find(1);
         $this->actingAs($this->user);
@@ -45,7 +45,6 @@ class UserControllerTest extends TestCase
         dd($request);
         $userContr = new UserController();
         dd($userContr->store($request));
-
     }
 
     /**
