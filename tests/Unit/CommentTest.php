@@ -18,7 +18,7 @@ class CommentTest extends TestCase
 
     use DatabaseMigrations;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->seed('DatabaseSeeder');
@@ -28,11 +28,11 @@ class CommentTest extends TestCase
      * @param $testData
      * @dataProvider addContentProvider
      */
-    public function testAddContent($testData)
+    public function testAddContent(array $testData): void
     {
         $comment = new Comment();
         $comment->addContent($testData);
-        foreach ($testData as $fieldName => $fieldValue){
+        foreach ($testData as $fieldName => $fieldValue) {
             $this->assertSame($fieldValue, $comment->$fieldName);
         }
     }
@@ -42,7 +42,7 @@ class CommentTest extends TestCase
      * @param array $answer
      * @dataProvider validateProvider
      */
-    public function testValidate(array $testData, array $answer)
+    public function testValidate(array $testData, array $answer): void
     {
         $comment = new Comment();
         $comment->addContent($testData);
@@ -52,13 +52,14 @@ class CommentTest extends TestCase
 
     }
 
-    public function validateProvider(){
+    public function validateProvider(): array
+    {
         return [
             [[
                 'post_id' => '1',
                 'user_id' => '1',
                 'body' => 'My first comment.',
-            ], [], ],
+            ], [],],
             [[
                 'post_id' => '9999',
                 'user_id' => '2',
@@ -87,7 +88,8 @@ class CommentTest extends TestCase
         ];
     }
 
-    public function addContentProvider(){
+    public function addContentProvider(): array
+    {
         return [
             [[
                 'post_id' => '1',

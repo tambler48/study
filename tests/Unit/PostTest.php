@@ -17,7 +17,7 @@ class PostTest extends TestCase
 
     use DatabaseMigrations;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->seed('DatabaseSeeder');
@@ -27,11 +27,11 @@ class PostTest extends TestCase
      * @param $testData
      * @dataProvider addPostProvider
      */
-    public function testAddPost($testData)
+    public function testAddPost(array $testData): void
     {
         $post = new Post();
         $post->addPost($testData);
-        foreach ($testData as $fieldName => $fieldValue){
+        foreach ($testData as $fieldName => $fieldValue) {
             $this->assertSame($fieldValue, $post->$fieldName);
         }
     }
@@ -41,7 +41,7 @@ class PostTest extends TestCase
      * @param array $answer
      * @dataProvider validateProvider
      */
-    public function testValidate(array $testData, array $answer)
+    public function testValidate(array $testData, array $answer): void
     {
         $post = new Post();
         $post->addPost($testData);
@@ -50,7 +50,8 @@ class PostTest extends TestCase
         $this->assertSame(0, count(array_diff_key($answer, $result)));
     }
 
-    public function addPostProvider(){
+    public function addPostProvider(): array
+    {
         return [
             [[
                 'user_id' => '1',
@@ -70,7 +71,8 @@ class PostTest extends TestCase
         ];
     }
 
-    public function validateProvider(){
+    public function validateProvider(): array
+    {
         return [
             [[
                 'user_id' => '1',
@@ -86,7 +88,7 @@ class PostTest extends TestCase
             ]],
             [[
                 'user_id' => '3',
-                ], [
+            ], [
                 'header' => true,
                 'body' => true
             ]],
