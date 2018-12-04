@@ -41,12 +41,6 @@ class CommentControllerApi extends Controller
         }
         $post = $this->trim($request->post());
         $comment->addContent($post);
-
-        $comment->addValidate([
-            'post_id' => ['required',],
-            'user_id' => ['required',],
-            'body' => ['required',],
-        ]);
         $result = $comment->validate();
         if (count($result)) {
             return $this->jsonResponse($result, 406);

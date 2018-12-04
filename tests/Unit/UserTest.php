@@ -20,7 +20,7 @@ class UserTest extends TestCase
 
     use DatabaseMigrations;
 
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         $this->seed('DatabaseSeeder');
@@ -30,7 +30,7 @@ class UserTest extends TestCase
      * @param $testData
      * @dataProvider addModelProvider
      */
-    public function testAddModel(array $testData)
+    public function testAddModel(array $testData): void
     {
         $this->user = new User();
         $this->user->addModel($testData);
@@ -39,7 +39,7 @@ class UserTest extends TestCase
         }
     }
 
-    public function testGenerateToken()
+    public function testGenerateToken(): void
     {
         $this->user = new User();
         $token = $this->user->generateToken();
@@ -50,7 +50,7 @@ class UserTest extends TestCase
      * @param $testData
      * @dataProvider validateProvider
      */
-    public function testValidate(array $testData, array $answer)
+    public function testValidate(array $testData, array $answer): void
     {
         $this->user = new User();
         $this->user->addModel($testData);
@@ -62,7 +62,7 @@ class UserTest extends TestCase
     /**
      *  Data provider for testValidate method
      */
-    public static function validateProvider()
+    public static function validateProvider() :array
     {
         return [
             [[
@@ -102,7 +102,7 @@ class UserTest extends TestCase
     /**
      *  Data provider for addModel method
      */
-    public static function addModelProvider()
+    public static function addModelProvider() :array
     {
         return [
             [[

@@ -41,11 +41,6 @@ class CommentController extends Controller
         $post = $this->trim($request->post());
         $comment->addContent($post);
 
-        $comment->addValidate([
-            'post_id' => ['required',],
-            'user_id' => ['required',],
-            'body' => ['required',],
-        ]);
         $result = $comment->validate();
         if (count($result)) {
             Session::flash('alert', $result);

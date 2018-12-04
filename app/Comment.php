@@ -9,9 +9,9 @@ class Comment extends Model
 {
 
     protected $validators = [
-        'post_id' => ['exists:posts,id',],
-        'user_id' => ['exists:users,id',],
-        'body' => ['string',],
+        'post_id' => ['required', 'exists:posts,id',],
+        'user_id' => ['required', 'exists:users,id',],
+        'body' => ['required', 'string',],
     ];
 
     public function addContent(array $post): void
@@ -19,11 +19,6 @@ class Comment extends Model
         foreach ($post as $key => $value) {
             $this->$key = $value;
         }
-    }
-
-    public function addValidate(array $valids): void
-    {
-        $this->validators = array_merge_recursive($valids, $this->validators);
     }
 
     public function validate(): array
