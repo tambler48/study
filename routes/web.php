@@ -11,29 +11,46 @@
 |
 */
 
-Route::prefix('user')->middleware('auth')->group( function () {
+Route::prefix('user')->middleware('auth')->group(function () {
     Route::get('', function () {
         return redirect()->route('user.posts');
     });
     Route::get('posts/new', 'PostController@createForm')->name('user.new');
-    Route::post('posts/new', 'PostController@create');
-    Route::get('posts', 'PostController@allUser')->name('user.posts');
-    Route::get('posts/unset/{id}', 'PostController@delete')->name('user.unset');
+    Route::post('posts/new', 'PostController@store');
+    Route::get('posts', 'PostController@index')->name('user.posts');
+    Route::get('posts/{id}', 'PostController@show')->name('user.post');
+    Route::get('posts/unset/{id}', 'PostController@destroy')->name('user.unset');
     Route::get('posts/edit/{id?}', 'PostController@editForm')->name('user.edit');
-    Route::post('posts/edit', 'PostController@edit');
+    Route::post('posts/edit/{id}', 'PostController@update');
+
+    Route::resource('manage', 'UserController');
+    Route::get('manage/{manage}/remove', 'UserController@remove')->name('manage.remove');
+    Route::get('manage/{manage}/restore', 'UserController@restore')->name('manage.restore');
+
+    Route::post('posts/comments', 'CommentController@store')->name('comment.store');
+    Route::delete('posts/comments/{id}', 'CommentController@destroy')->name('comment.destroy');
+    Route::get('posts/comments/{id}', 'CommentController@edit')->name('comment.edit');
+    Route::put('posts/comments/{id}', 'CommentController@update')->name('comment.update');
+
 });
 
-Route::get('/posts', 'PostController@all');
-Route::get('/posts/{id}', 'PostController@byId')->name('all.post');
 
-//5 енд поинтов для операций все, 1, создание, редактирование, удаление
-//удалить posts из методов, уточнить тип объекта, изменить unset на delete, изменить admin на пользователя
+Route::get('/posts', 'PostController@all')->name('all.posts');
+Route::get('/posts/{id}', 'PostController@show')->name('all.post');
 
+Route::get('setlocale/{name}', function (string $name) {
+    $response = redirect()->back();
+    $locales = \Config::get('app.locales');
+    if (in_array($name, $locales, true)) {
+        $response->cookie(Cookie::forever('locale', $name));
+    }
+    return $response;
+})->name('setlocale');
 
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('main');
 
 Auth::routes();
 

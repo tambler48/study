@@ -2,96 +2,133 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\User;
+use Gate;
+use Illuminate\Support\Facades\Hash;
 
 class UserControllerApi extends Controller
 {
     public function index(): JsonResponse
     {
-        $model = \App\User::all();
-
+        if (Gate::denies('view', new User)) {
+            return $this->jsonResponse('', 403);
+        }
+        $model = User::all();
         if (!count($model)) {
-            return $this->jsonResponse('Not found users', 400);
+            return $this->jsonResponse('', 404);
         }
         return $this->jsonResponse($model, 200);
     }
 
     public function store(Request $request): JsonResponse
     {
-
-        $validator = Validator::make($request->post(), [
-            'name' => ['bail', 'required', 'max:191', 'string',],
-            'email' => ['bail', 'required', 'max:191', 'string', 'email', 'unique:users',],
-            'password' => ['bail', 'required', 'min:6', 'string',],
-            'api_token' => ['bail', 'required', 'size:60', 'string', 'unique:users',],
-        ]);
-
-        if ($validator->fails()) {
-            return $this->jsonResponse($validator->errors(), 400);
+        if (Gate::denies('create', new User)) {
+            return $this->jsonResponse('', 403);
         }
-
-        $model = new \App\User;
-        $model->name = $request->name;
-        $model->email = $request->email;
-        $model->password = $request->password;
-        $model->api_token = $request->api_token;
-        $model->save();
-        return $this->jsonResponse(['User successfully added', $model->getAttributes()], 201);
-
+        $user = new User();
+        $params = $this->trim($request->post());
+        $user->addModel($params);
+        $validateResult = $user->validate();
+        if (count($validateResult)) {
+            return $this->jsonResponse($validateResult, 406);
+        }
+        $user->password = Hash::make($user->password);
+        $user->__unset('password_confirmation');
+        $user->save();
+        return $this->jsonResponse( $user->getAttributes(), 201);
     }
 
-    public function show($id): JsonResponse
+    public function show(int $id): JsonResponse
     {
-
-        $model = \App\User::find($id);
+        if (Gate::denies('view', new User)) {
+            return $this->jsonResponse('', 403);
+        }
+        $model = User::find($id);
         if (empty($model)) {
-            return $this->jsonResponse('Not found user', 400);
+            return $this->jsonResponse('', 404);
         }
         return $this->jsonResponse($model, 200);
     }
 
-    public function update(Request $request, $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
-        $model = \App\User::find($id);
-        if (empty($model)) {
-            return $this->jsonResponse('Not found user', 400);
+        if (Gate::denies('update', new User)) {
+            return $this->jsonResponse('', 403);
+        }
+        $user = User::find($id);
+        if (empty($user)) {
+            return $this->jsonResponse('', 404);
         }
 
-        $validator = Validator::make($request->post(), [
-            'name' => ['bail', 'string', 'max:191',],
-            'email' => ['bail', 'string', 'max:191', 'email', 'unique:users',],
-            'api_token' => ['bail', 'string', 'size:60', 'unique:users',],
-        ]);
-
-        if ($validator->fails()) {
-            return $this->jsonResponse($validator->errors());
+        $params = $this->trim($request->post());
+        $user->addModel($params);
+        $validateResult = $user->validate($id);
+        if (count($validateResult)) {
+            return $this->jsonResponse($validateResult, 406);
         }
-
-        $model->name = $request->post('name') ?? $model->name;
-        $model->email = $request->post('email') ?? $model->email;
-        $model->api_token = $request->post('api_token') ?? $model->api_token;
-
-        $model->save();
-        return $this->jsonResponse(['User successfully updated', $model->getAttributes()], 201);
+        $user->password = Hash::make($user->password);
+        $user->__unset('password_confirmation');
+        $user->save();
+        return $this->jsonResponse( $user->getAttributes(), 201);
 
     }
 
-    public function destroy($id): JsonResponse
+    public function destroy(int $id): JsonResponse
     {
-        $model = \App\User::find($id);
-        if (empty($model)) {
-            return $this->jsonResponse('Not found user', 400);
+        if (Gate::denies('destroy', new User)) {
+            return $this->jsonResponse('', 403);
+        }
+        $user = User::find($id);
+        if (empty($user)) {
+            return $this->jsonResponse('', 404);
         }
 
-        $model = \App\User::destroy($id);
-        if ($model === 0) {
-            return $this->jsonResponse('Unknown error', 400);
+        $user = User::destroy($id);
+        if ($user === 0) {
+            return $this->jsonResponse('', 418);
         }
-        return $this->jsonResponse('User successfully deleted', 201);
+        return $this->jsonResponse('', 204);
 
     }
 
+
+    public function remove(int $id): JsonResponse
+    {
+        $user = User::find($id);
+        if (empty($user)) {
+            return $this->jsonResponse('', 404);
+        }
+
+        if (Gate::denies('remove', $user)) {
+            return $this->jsonResponse('', 403);
+        }
+
+        $user->active = false;
+        $user->timestamps = false;
+        $user->save();
+
+        return $this->jsonResponse('', 204);
+
+    }
+
+    public function restore(int $id): JsonResponse
+    {
+        $user = User::find($id);
+        if (empty($user)) {
+            return $this->jsonResponse('', 404);
+        }
+
+        if (Gate::denies('restore', $user)) {
+            return $this->jsonResponse('', 403);
+        }
+
+        $user->active = true;
+        $user->timestamps = false;
+        $user->save();
+
+        return $this->jsonResponse('', 200);
+    }
 
 }
