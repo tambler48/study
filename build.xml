@@ -3,6 +3,7 @@
 <project name="study" default="build" basedir=".">
     <property name="build-dir" value="${basedir}/build" />
     <property name="src-dir" value="${basedir}/app" />
+    <property name="php-unit-path" value="${basedir}/vendor/phpunit/phpunit" />
 
     <target name="build"
             depends="build-common,phploc,phpdox,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpcb" />
@@ -165,7 +166,7 @@
     </target>
 
     <target name="phpunit" description="Run unit tests with PHPUnit">
-        <exec executable="phpunit" failonerror="true">
+        <exec executable="${php-unit-path}/phpunit" failonerror="true">
             <arg value="-c" />
             <arg value="${basedir}/phpunit.xml" />
             <arg value="--coverage-html" />
