@@ -4,7 +4,7 @@
     <property name="build-dir" value="${basedir}/build" />
     <property name="src-dir" value="${basedir}/app" />
     <property name="php-unit-path" value="${basedir}/vendor/phpunit/phpunit" />
-
+    <property environment="env"/>
     <target name="build"
             depends="build-common,phploc,phpdox,pdepend,phpmd-ci,phpcs-ci,phpcpd,phpcb" />
 
@@ -88,7 +88,7 @@
     </target>
 
     <target name="pdepend" description="Calculate software metrics using PHP_Depend">
-        <exec executable="${PATH}/pdepend">
+        <exec executable="${env.PATH}/pdepend">
             <arg value="--jdepend-xml=${build-dir}/logs/jdepend.xml" />
             <arg value="--jdepend-chart=${build-dir}/pdepend/dependencies.svg" />
             <arg value="--overview-pyramid=${build-dir}/pdepend/overview-pyramid.svg" />
@@ -97,7 +97,7 @@
     </target>
 
     <target name="phpcb" description="Aggregate tool output with PHP_CodeBrowser">
-        <exec executable="${PATH}/phpcb">
+        <exec executable="${env.PATH}/phpcb">
             <arg value="--log" />
             <arg path="${build-dir}/logs" />
             <arg value="--source" />
@@ -108,7 +108,7 @@
     </target>
 
     <target name="phpcpd" description="Find duplicate code using PHPCPD">
-        <exec executable="${PATH}/phpcpd">
+        <exec executable="${env.PATH}/phpcpd">
             <arg value="--log-pmd" />
             <arg value="${build-dir}/logs/pmd-cpd.xml" />
             <arg path="${src-dir}" />
@@ -133,14 +133,14 @@
     </target>
 
     <target name="phpdox" description="Generate API documentation using phpDox">
-        <exec executable="${PATH}/phpdox">
+        <exec executable="${env.PATH}/phpdox">
             <arg value="-f" />
             <arg value="${build-dir}/phpdox.xml" />
         </exec>
     </target>
 
     <target name="phploc" description="Measure project size using PHPLOC">
-        <exec executable="${PATH}/phploc">
+        <exec executable="${env.PATH}/phploc">
             <arg value="--log-csv" />
             <arg value="${build-dir}/logs/phploc.csv" />
             <arg path="${src-dir}" />
